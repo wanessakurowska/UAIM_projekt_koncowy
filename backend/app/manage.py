@@ -1,8 +1,8 @@
 
-from model import db, Klinika, Adresy, Poczty, Wlasciciele, Pracownik, Stanowiska, Terminarz, Weterynarze, Klienci, \
+from main import app, db
+from model import Klinika, Adresy, Poczty, Wlasciciele, Pracownik, Stanowiska, Terminarz, Weterynarze, Klienci, \
     Zwierzak, Rasa, Doleglosci, WizytaWeterynarz, SpotkanieDoleglosci, PracownicyKliniki
 from datetime import datetime
-from main import app, db
 
 @app.cli.command("create_db")
 def create_db():
@@ -10,6 +10,7 @@ def create_db():
     db.create_all()
     db.session.commit()
     print("Baza danych została utworzona.")
+    print(db)
 
 @app.cli.command("initialize_data")
 def init_data():
@@ -138,11 +139,6 @@ def init_data():
 
     db.session.add_all([spotkanie_doleglosci1, spotkanie_doleglosci2])
     db.session.commit()
-
-
-    from main import app, db
-from model import Klinika, Adresy, Poczty, Wlasciciele, Pracownik, Stanowiska, Terminarz, Weterynarze, Klienci, \
-    Zwierzak, Rasa, Doleglosci, WizytaWeterynarz, SpotkanieDoleglosci, PracownicyKliniki
 
 @app.cli.command("show_data")
 def show_data():
