@@ -1,15 +1,4 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, date, timedelta
-
-app = Flask(__name__)
-
-# Configuring PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://<username>:<password>@<host>:<port>/<database_name>'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
+from main import db
 
 # Klinika and its related tables
 class Klinika(db.Model):
@@ -64,12 +53,12 @@ class Pracownik(db.Model):
     id_pracownika = db.Column(db.Integer, primary_key=True, nullable=False)
     nazwisko = db.Column(db.String(40), nullable=False)
     imie = db.Column(db.String(20), nullable=False)
-    data_urodzenia = db.Column(db.Date, nullable=False)
+    data_urodzenia = db.Column(db.DateTime, nullable=False)
     plec = db.Column(db.String(1), nullable=False)
-    data_zatrudnienia = db.Column(db.Date, nullable=False)
+    data_zatrudnienia = db.Column(db.DateTime, nullable=False)
     nr_telefonu = db.Column(db.String(20))
     pesel = db.Column(db.String(11))
-    data_zwolnienia = db.Column(db.Date)
+    data_zwolnienia = db.Column(db.DateTime)
     id_stanowiska = db.Column(db.Integer, db.ForeignKey('stanowiska.id_stanowiska'), nullable=False)
     id_adresu = db.Column(db.Integer, db.ForeignKey('adresy.id_adresu'), nullable=False)
     id_kliniki = db.Column(db.Integer, db.ForeignKey('klinika.id_kliniki'), nullable=False)
@@ -80,8 +69,8 @@ class Pracownik(db.Model):
 class PracownicyKliniki(db.Model):
     __tablename__ = 'pracownicy_kliniki'
     id_pracownika = db.Column(db.Integer, db.ForeignKey('pracownik.id_pracownika'), primary_key=True, nullable=False)
-    godziny_pracy_od = db.Column(db.Time, nullable=False)
-    godziny_pracy_do = db.Column(db.Time, nullable=False)
+    godziny_pracy_od = db.Column(db.DateTime, nullable=False)
+    godziny_pracy_do = db.Column(db.DateTime, nullable=False)
 
 
 # Job-related tables
@@ -114,7 +103,7 @@ class Terminarz(db.Model):
     __tablename__ = 'terminarz'
     id_wizyty = db.Column(db.Integer, primary_key=True, nullable=False)
     data_wizyty = db.Column(db.Date, nullable=False)
-    godzina_wizyty_od = db.Column(db.Time, nullable=False)
+    godzina_wizyty_od = db.Column(db.DateTime, nullable=False)
     cena = db.Column(db.Numeric(5, 2))
     powod_wizyty = db.Column(db.String(200), nullable=False)
     id_pupila = db.Column(db.Integer, db.ForeignKey('zwierzak.id_pupila'), nullable=False)
