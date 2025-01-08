@@ -119,7 +119,7 @@ class Uslugi(db.Model):
 class WizytaUslugi(db.Model):
     __tablename__ = 'wizyta_uslugi'
     id_wizyty = db.Column(db.Integer, db.ForeignKey('terminarz.id_wizyty'), primary_key=True, nullable=False)
-    powod_wizyty = db.Column(db.Integer, db.ForeignKey('uslugi.id_pupila'), nullable=False)
+    powod_wizyty = db.Column(db.Integer, db.ForeignKey('uslugi.id_pupila'), primary_key=True, nullable=False)
 
 class SpotkanieDoleglosci(db.Model):
     __tablename__ = 'spotkanie_doleglosci'
