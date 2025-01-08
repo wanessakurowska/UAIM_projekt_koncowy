@@ -105,9 +105,21 @@ class Terminarz(db.Model):
     data_wizyty = db.Column(db.Date, nullable=False)
     godzina_wizyty_od = db.Column(db.DateTime, nullable=False)
     cena = db.Column(db.Numeric(5, 2))
-    powod_wizyty = db.Column(db.String(200), nullable=False)
     id_pupila = db.Column(db.Integer, db.ForeignKey('zwierzak.id_pupila'), nullable=False)
 
+class Uslugi(db.Model):
+    __tablename__ = 'uslugi'
+    id_uslugi = db.Column(db.Integer, primary_key=True, nullable=False)
+    nazwa = db.Column(db.String(50), nullable=False)
+    opis = db.Column(db.String(200))
+    cena = db.Column(db.Numeric(5, 2))
+    dostepnosc = db.Column(db.String(20))
+
+    
+class WizytaUslugi(db.Model):
+    __tablename__ = 'wizyta_uslugi'
+    id_wizyty = db.Column(db.Integer, db.ForeignKey('terminarz.id_wizyty'), primary_key=True, nullable=False)
+    powod_wizyty = db.Column(db.Integer, db.ForeignKey('uslugi.id_pupila'), nullable=False)
 
 class SpotkanieDoleglosci(db.Model):
     __tablename__ = 'spotkanie_doleglosci'
