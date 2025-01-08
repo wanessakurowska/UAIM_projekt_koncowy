@@ -1,8 +1,7 @@
-
-from main import app, db
 from model import Klinika, Adresy, Poczty, Wlasciciele, Pracownik, Stanowiska, Terminarz, Weterynarze, Klienci, \
-    Zwierzak, Rasa, Doleglosci, WizytaWeterynarz, SpotkanieDoleglosci, PracownicyKliniki
+    Zwierzak, Rasa, Doleglosci, WizytaWeterynarz, SpotkanieDoleglosci, PracownicyKliniki, Uslugi, WizytaUslugi
 from datetime import datetime
+from main import app, db
 
 @app.cli.command("create_db")
 def create_db():
@@ -10,7 +9,6 @@ def create_db():
     db.create_all()
     db.session.commit()
     print("Baza danych została utworzona.")
-    print(db)
 
 @app.cli.command("initialize_data")
 def init_data():
@@ -119,9 +117,9 @@ def init_data():
 
     #terminarz
     terminarz1 = Terminarz(data_wizyty=datetime(2025, 2, 15), godzina_wizyty_od=datetime(2025, 2, 15, 10, 0),
-                           cena=100.00, powod_wizyty="Kontrola zdrowia", id_pupila=zwierzak1.id_pupila)
+                           cena=100.00, id_pupila=zwierzak1.id_pupila)
     terminarz2 = Terminarz(data_wizyty=datetime(2025, 2, 16), godzina_wizyty_od=datetime(2025, 2, 16, 11, 0),
-                           cena=150.00, powod_wizyty="Ból brzucha", id_pupila=zwierzak2.id_pupila)
+                           cena=150.00, id_pupila=zwierzak2.id_pupila)
 
     db.session.add_all([terminarz1, terminarz2])
     db.session.commit()
@@ -131,6 +129,23 @@ def init_data():
     wizyta_weterynarz2 = WizytaWeterynarz(id_wizyty=terminarz2.id_wizyty, id_pracownika=weterynarz1.id_pracownika)
 
     db.session.add_all([wizyta_weterynarz1, wizyta_weterynarz2])
+    db.session.commit()
+    
+    #uslugi
+    usluga1 = Uslugi(nazwa="Badanie kontrolne", opis="Standardowe badanie stanu zdrowia", cena=100.00, dostepnosc="Dostępna")
+    usluga2 = Uslugi(nazwa="Szczepienie", opis="Podanie szczepionki ochronnej", cena=80.00, dostepnosc="Dostępna")
+    usluga3 = Uslugi(nazwa="Sterylizacja", opis="Zabieg chirurgiczny sterylizacji", cena=300.00, dostepnosc="Ograniczona")
+    usluga4 = Uslugi(nazwa="Czipowanie", opis="Zabieg implantacji mikroczipa", cena=150.00, dostepnosc="Dostępna")
+
+    db.session.add_all([usluga1, usluga2, usluga3, usluga4])
+    db.session.commit()
+
+    #wizyta_uslugi
+    wizyta_usluga1 = WizytaUslugi(id_wizyty=terminarz1.id_wizyty, powod_wizyty=usluga1.id_uslugi)
+    wizyta_usluga2 = WizytaUslugi(id_wizyty=terminarz1.id_wizyty, powod_wizyty=usluga2.id_uslugi)
+    wizyta_usluga3 = WizytaUslugi(id_wizyty=terminarz2.id_wizyty, powod_wizyty=usluga3.id_uslugi)
+
+    db.session.add_all([wizyta_usluga1, wizyta_usluga2, wizyta_usluga3])
     db.session.commit()
 
     #spotkanie_dol
@@ -175,7 +190,7 @@ def show_data():
     # Pracownicy
     print("Pracownicy:")
     for pracownik in Pracownik.query.all():
-        print(f"ID: {pracownik.id_pracownika}, Imię: {pracownik.imie}, Nazwisko: {pracownik.nazwisko}, Data Zatrudnienia: {pracownik.data_zatrudnienia}, ID Kliniki: {pracownik.id_kliniki}")
+        print(f"ID: {pracownik.id_pracownika}, Imię: {pracownik.imie}, Nazwisko: {pracownik.nazwisko}, Data Urodzenia: {pracownik.data_urodzenia}, Plec: {pracownik.plec}, Data Zatrudnienia: {pracownik.data_zatrudnienia}, Nr Telefonu: {pracownik.nr_telefonu}, PESEL: {pracownik.pesel}, ID Stanowiska: {pracownik.id_stanowiska}, ID Adresu: {pracownik.id_adresu}, ID Kliniki: {pracownik.id_kliniki}")
     print()
 
     # Weterynarze
@@ -211,13 +226,25 @@ def show_data():
     # Terminarz
     print("Terminarz:")
     for terminarz in Terminarz.query.all():
-        print(f"ID Wizyty: {terminarz.id_wizyty}, Data Wizyty: {terminarz.data_wizyty}, Godzina Wizyty: {terminarz.godzina_wizyty_od}, Cena: {terminarz.cena}, Powód Wizyty: {terminarz.powod_wizyty}, ID Pupila: {terminarz.id_pupila}")
+        print(f"ID Wizyty: {terminarz.id_wizyty}, Data Wizyty: {terminarz.data_wizyty}, Godzina Wizyty: {terminarz.godzina_wizyty_od}, Cena: {terminarz.cena}, ID Pupila: {terminarz.id_pupila}")
     print()
 
     # Wizyty Weterynarzy
     print("Wizyty Weterynarzy:")
     for wizyta in WizytaWeterynarz.query.all():
         print(f"ID Wizyty: {wizyta.id_wizyty}, ID Pracownika: {wizyta.id_pracownika}")
+    print()
+
+    # Uslugi
+    print("Uslugi:")
+    for usluga in Uslugi.query.all():
+        print(f"ID Uslugi: {usluga.id_uslugi}, Nazwa Uslugi: {usluga.nazwa}, Opis Uslugi: {usluga.opis}, Cena Uslugi: {usluga.cena}, Dostepnosc Uslugi: {usluga.dostepnosc}")
+    print()
+
+    # Wizyty Uslugi
+    print("Wizyta Uslugi:")
+    for wizytausluga in WizytaUslugi.query.all():
+        print(f"ID Wizyty: {wizytausluga.id_wizyty}, ID Uslugi: {wizytausluga.powod_wizyty}")
     print()
 
     # Spotkania Dolegliwości
