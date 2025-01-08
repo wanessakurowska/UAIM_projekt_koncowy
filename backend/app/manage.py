@@ -2,6 +2,7 @@ from model import Klinika, Adresy, Poczty, Wlasciciele, Pracownik, Stanowiska, T
     Zwierzak, Rasa, Doleglosci, WizytaWeterynarz, SpotkanieDoleglosci, PracownicyKliniki, Uslugi, WizytaUslugi
 from datetime import datetime
 from main import app, db
+from werkzeug.security import generate_password_hash
 
 @app.cli.command("create_db")
 def create_db():
@@ -80,9 +81,9 @@ def init_data():
     db.session.commit()
 
     #klienci
-    klient1 = Klienci(imie="Piotr", nazwisko="Wiśniewski", nr_telefonu="654654654", adres_email="piotr@example.com",
+    klient1 = Klienci(imie="Piotr", nazwisko="Wiśniewski", nr_telefonu="654654654", adres_email="piotrwisniewski@gmail.com", haslo=generate_password_hash("Piotrulo321", method="pbkdf2:sha256"),
                       id_adresu=adres5.id_adresu)
-    klient2 = Klienci(imie="Magdalena", nazwisko="Szymańska", nr_telefonu="456456456", adres_email="magda@example.com",
+    klient2 = Klienci(imie="Magdalena", nazwisko="Szymańska", nr_telefonu="456456456", adres_email="magda_sz@wp.pl", haslo=generate_password_hash("SzMagda.1", method="pbkdf2:sha256"), 
                       id_adresu=adres6.id_adresu)
 
     db.session.add_all([klient1, klient2])
@@ -119,7 +120,7 @@ def init_data():
     terminarz1 = Terminarz(data_wizyty=datetime(2025, 2, 15), godzina_wizyty_od=datetime(2025, 2, 15, 10, 0),
                            cena=100.00, id_pupila=zwierzak1.id_pupila)
     terminarz2 = Terminarz(data_wizyty=datetime(2025, 2, 16), godzina_wizyty_od=datetime(2025, 2, 16, 11, 0),
-                           cena=150.00, id_pupila=zwierzak2.id_pupila)
+                           cena=150.00, id_pupila=zwierzak1.id_pupila)
 
     db.session.add_all([terminarz1, terminarz2])
     db.session.commit()
