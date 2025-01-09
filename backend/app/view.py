@@ -187,153 +187,153 @@ def add_pet(aktualny_klient):
 # Pobranie listy weterynarzy
 @app.route('/veterinarian-list', methods=['GET'])
 def get_veterinarians():
-    veterinarians = Weterynarze.query.all()
+    weterynarze = Weterynarze.query.all()
 
-    if not veterinarians:
+    if not weterynarze:
         return jsonify({
             "error": "Brak weterynarzy w bazie danych."
         }), 404
 
-    result = []
-    for vet in veterinarians:
-        pracownik = Pracownik.query.get(vet.id_pracownika)
+    wynik = []
+    for weterynarz in weterynarze:
+        pracownik = Pracownik.query.get(weterynarz.id_pracownika)
         if pracownik:
             klinika = Klinika.query.get(pracownik.id_kliniki)
-            result.append({
-                "id": vet.id_pracownika,
+            wynik.append({
+                "id": weterynarz.id_pracownika,
                 "imię": pracownik.imie,
                 "nazwisko": pracownik.nazwisko,
-                "doświadczenie": vet.doswiadczenie,
-                "kwalifikacje": vet.kwalifikacje,
-                "status": vet.status,
+                "doświadczenie": weterynarz.doswiadczenie,
+                "kwalifikacje": weterynarz.kwalifikacje,
+                "status": weterynarz.status,
                 "klinika": klinika.nazwa if klinika else None
             })
 
-    return jsonify(result), 200
+    return jsonify(wynik), 200
 
 # Pobranie katalogu usług
 @app.route('/service-list', methods=['GET'])
 def get_services():
-    services = Uslugi.query.all() 
+    uslugi = Uslugi.query.all() 
 
-    if not services:
+    if not uslugi:
         return jsonify({
             "error": "Brak usług w bazie danych."
         }), 404
 
-    result = [
+    wynik = [
         {
-            "id": service.id_uslugi,
-            "nazwa": service.nazwa,
-            "opis": service.opis,
-            "cena": float(service.cena) if service.cena else None,
-            "dostepnosc": service.dostepnosc
+            "id": usluga.id_uslugi,
+            "nazwa": usluga.nazwa,
+            "opis": usluga.opis,
+            "cena": float(usluga.cena) if usluga.cena else None,
+            "dostepnosc": usluga.dostepnosc
         }
-        for service in services
+        for usluga in uslugi
     ]
 
-    return jsonify(result), 200
+    return jsonify(wynik), 200
 
 # Pobieranie historii wizyt użytkownika
 @app.route('/client-appointments', methods=['GET'])
 def get_client_appointments():
-    # Pobierz client_id z parametrów żądania
-    client_id = request.args.get('client_id', type=int)
-    if not client_id:
+    # Pobierz klient_id z parametrów żądania
+    klient_id = request.args.get('klient_id', type=int)
+    if not klient_id:
         return jsonify({
-            "error": "Parametr 'client_id' jest wymagany."
+            "error": "Parametr 'klient_id' jest wymagany."
         }), 400
     
-    # Pobierz klienta (użytkownika)
-    client = Klienci.query.get(client_id)
-    if not client:
+    # Pobierz klienta
+    klient = Klienci.query.get(klient_id)
+    if not klient:
         return jsonify({
-            "error": "Nie znaleziono użytkownika o podanym ID."
+            "error": "Nie znaleziono klienta o podanym ID."
         }), 404
 
-    # Pobierz wszystkie zwierzaki użytkownika
-    zwierzaki = Zwierzak.query.filter_by(id_klienta=client_id).all()
+    # Pobierz wszystkie zwierzaki klienta
+    zwierzaki = Zwierzak.query.filter_by(id_klienta=klient_id).all()
     if not zwierzaki:
         return jsonify({
-            "error": "Nie znaleziono zwierzaków dla podanego użytkownika."
+            "error": "Nie znaleziono zwierzaków dla podanego klienta."
         }), 404
 
-    # Pobierz wszystkie wizyty dla zwierzaków użytkownika
-    appointments = Terminarz.query.filter(Terminarz.id_pupila.in_([z.id_pupila for z in zwierzaki])).all()
-    if not appointments:
+    # Pobierz wszystkie wizyty dla zwierzaków klienta
+    wizyty = Terminarz.query.filter(Terminarz.id_pupila.in_([z.id_pupila for z in zwierzaki])).all()
+    if not wizyty:
         return jsonify({
-            "error": "Brak wizyt dla podanego użytkownika."
+            "error": "Brak wizyt dla podanego klienta."
         }), 404
 
     # Przetwarzanie wyników
-    result = []
-    for appointment in appointments:
-        zwierzak = next((z for z in zwierzaki if z.id_pupila == appointment.id_pupila), None)
+    wynik = []
+    for wizyta in wizyty:
+        zwierzak = next((z for z in zwierzaki if z.id_pupila == wizyta.id_pupila), None)
         if zwierzak:
-            result.append({
-                "id_wizyty": appointment.id_wizyty,
-                "data_wizyty": appointment.data_wizyty.strftime('%Y-%m-%d'),
-                "godzina_wizyty_od": appointment.godzina_wizyty_od.strftime('%H:%M'),
+            wynik.append({
+                "id_wizyty": wizyta.id_wizyty,
+                "data_wizyty": wizyta.data_wizyty.strftime('%Y-%m-%d'),
+                "godzina_wizyty_od": wizyta.godzina_wizyty_od.strftime('%H:%M'),
                 "imie_pupila": zwierzak.imie
             })
 
-    return jsonify(result), 200
+    return jsonify(wynik), 200
 
 # Pobieranie szczegółów wizyty na podstawie ID
 @app.route('/appointment-details', methods=['GET'])
 def get_appointment_details():
-    # Pobierz appointment_id z parametrów żądania
-    appointment_id = request.args.get('appointment_id', type=int)
-    if not appointment_id:
+    # Pobierz wizyta_id z parametrów żądania
+    wizyta_id = request.args.get('wizyta_id', type=int)
+    if not wizyta_id:
         return jsonify({
-            "error": "Parametr 'appointment_id' jest wymagany."
+            "error": "Parametr 'wizyta_id' jest wymagany."
         }), 400
     
-    appointment = Terminarz.query.get(appointment_id)
-    if not appointment:
+    wizyta = Terminarz.query.get(wizyta_id)
+    if not wizyta:
         return jsonify({
             "error": "Nie znaleziono wizyty o podanym ID."
         }), 404
 
     # Pobierz informacje o zwierzaku
-    zwierzak = Zwierzak.query.get(appointment.id_pupila)
+    zwierzak = Zwierzak.query.get(wizyta.id_pupila)
     if not zwierzak:
         return jsonify({
             "error": "Nie znaleziono zwierzaka powiązanego z tą wizytą."
         }), 404
 
     # Pobierz usługi związane z wizytą
-    services = WizytaUslugi.query.filter_by(id_wizyty=appointment.id_wizyty).all()
-    service_details = [
+    uslugi = WizytaUslugi.query.filter_by(id_wizyty=wizyta.id_wizyty).all()
+    usluga_szczegoly = [
         {
-            "id_uslugi": service.powod_wizyty,
-            "nazwa": Uslugi.query.get(service.powod_wizyty).nazwa
+            "id_uslugi": usluga.powod_wizyty,
+            "nazwa": Uslugi.query.get(usluga.powod_wizyty).nazwa
         }
-        for service in services
+        for usluga in uslugi
     ]
 
     # Pobierz weterynarzy przypisanych do wizyty
-    veterinarians = WizytaWeterynarz.query.filter_by(id_wizyty=appointment.id_wizyty).all()
-    veterinarian_details = [
+    weterynarze = WizytaWeterynarz.query.filter_by(id_wizyty=wizyta.id_wizyty).all()
+    weterynarz_szczegoly = [
         {
-            "id_pracownika": vet.id_pracownika,
-            "imie": Pracownik.query.get(vet.id_pracownika).imie,
-            "nazwisko": Pracownik.query.get(vet.id_pracownika).nazwisko
+            "id_pracownika": weterynarz.id_pracownika,
+            "imie": Pracownik.query.get(weterynarz.id_pracownika).imie,
+            "nazwisko": Pracownik.query.get(weterynarz.id_pracownika).nazwisko
         }
-        for vet in veterinarians
+        for weterynarz in weterynarze
     ]
 
-    result = {
-        "id_wizyty": appointment.id_wizyty,
-        "data_wizyty": appointment.data_wizyty.strftime('%Y-%m-%d'),
-        "godzina_wizyty_od": appointment.godzina_wizyty_od.strftime('%H:%M'),
-        "cena": float(appointment.cena) if appointment.cena else None,
+    wynik = {
+        "id_wizyty": wizyta.id_wizyty,
+        "data_wizyty": wizyta.data_wizyty.strftime('%Y-%m-%d'),
+        "godzina_wizyty_od": wizyta.godzina_wizyty_od.strftime('%H:%M'),
+        "cena": float(wizyta.cena) if wizyta.cena else None,
         "imie_pupila": zwierzak.imie,
-        "uslugi": service_details,
-        "weterynarze": veterinarian_details
+        "uslugi": usluga_szczegoly,
+        "weterynarze": weterynarz_szczegoly
     }
 
-    return jsonify(result), 200
+    return jsonify(wynik), 200
 
 
 @app.route("/api/vet-availability", methods=["GET"])

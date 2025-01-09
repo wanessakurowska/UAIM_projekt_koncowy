@@ -8,7 +8,7 @@ headers = {
 }
 
 #TEST DLA GET veterinarian-list
-print("TESTY DLA GET veterinarian-list")
+print("TEST DLA GET veterinarian-list")
 
 r = requests.get(f"{url}/veterinarian-list")
 
@@ -24,7 +24,7 @@ else:
     print("Treść odpowiedzi:", r.text)
 
 #TEST DLA GET service-list
-print("TESTY DLA GET service-list")
+print("TEST DLA GET service-list")
 
 r = requests.get(f"{url}/service-list")
 
@@ -40,45 +40,47 @@ else:
     print("Treść odpowiedzi:", r.text)
 
 #TESTY DLA GET client-appointments
+print("TESTY DLA GET client-appointments")
 
-# Przykład pozytywny: poprawne client_id
+# Przykład pozytywny: poprawne klient_id
 print("[Przypadek pozytywny] klient istnieje:")
-params = {"client_id": 1}
+params = {"klient_id": 1}
 r = requests.get(f"{url}/client-appointments", params=params)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
-# Przykład negatywny: brak client_id
-print("\n[Przypadek negatywny] brak client_id:")
+# Przykład negatywny: brak klient_id
+print("\n[Przypadek negatywny] brak klient_id:")
 r = requests.get(f"{url}/client-appointments")
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
-# Przykład negatywny: niepoprawne client_id
-params = {"client_id": 999}
-print("\n[Przypadek negatywny] niepoprawne client_id:")
+# Przykład negatywny: niepoprawne klient_id
+params = {"klient_id": 999}
+print("\n[Przypadek negatywny] niepoprawne klient_id:")
 r = requests.get(f"{url}/client-appointments", params=params)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
-#TESTY DLA GET client-appointments
+#TESTY DLA GET appointment-details
+print("TESTY DLA GET appointment-details")
 
-# Przykład pozytywny: poprawne appointment_id
+# Przykład pozytywny: poprawne wizyta_id
 print("[Przypadek pozytywny] wizyta istnieje:")
-params = {"appointment_id": 3}
+params = {"wizyta_id": 3}
 r = requests.get(f"{url}/appointment-details", params=params)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
-# Przykład negatywny: brak appointment_id
-print("\n[Przypadek negatywny] brak appointment_id:")
+# Przykład negatywny: brak wizyta_id
+print("\n[Przypadek negatywny] brak wizyta_id:")
 r = requests.get(f"{url}/appointment-details")
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
-# Przykład negatywny: niepoprawne appointment_id
-params = {"appointment_id": 999}
-print("\n[Przypadek negatywny] niepoprawne appointment_id:")
+# Przykład negatywny: niepoprawne wizyta_id
+params = {"wizyta_id": 999}
+print("\n[Przypadek negatywny] niepoprawne wizyta_id:")
 r = requests.get(f"{url}/appointment-details", params=params)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
