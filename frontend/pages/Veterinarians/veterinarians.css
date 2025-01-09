@@ -1,0 +1,35 @@
+.veterinarians-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .veterinarians-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .veterinarians-table th,
+  .veterinarians-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .veterinarians-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .veterinarians-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .veterinarians-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  
