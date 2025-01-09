@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = "http://localhost:5000"
+url = "http://localhost:5000"
 
 headers = {
     "Content-Type": "application/json"
@@ -16,12 +16,12 @@ data = {
     "nr_telefonu": "890457638",
     "id_adresu": 7
 }
-r = requests.post(f"{BASE_URL}/api/register", headers=headers, json=data)
+r = requests.post(f"{url}/api/register", headers=headers, json=data)
 print(r.json())
 print("Status code:", r.status_code)
 
 # 2. Test negatywny: Rejestracja z istniejącym emailem
 print("\n[Przypadek negatywny]: Rejestracja z istniejącym emailem")
-r = requests.post(f"{BASE_URL}/api/register", headers=headers, json=data)
+r = requests.post(f"{url}/api/register", headers=headers, json=data)
 print(r.json())
 print("Status code:", r.status_code)

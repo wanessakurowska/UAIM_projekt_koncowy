@@ -5,8 +5,11 @@ from datetime import datetime, timedelta, timezone
 from model import Weterynarze, Pracownik, Klinika, Uslugi, Terminarz, Zwierzak, WizytaUslugi, WizytaWeterynarz, Klienci
 from main import app, db
 
+
+
 SECRET_KEY = "21xuaim2024Zx37"
 
+# Rejestracja klienta
 @app.route("/api/register", methods=["POST"])
 def register():
     dane = request.json
@@ -39,6 +42,7 @@ def register():
     return jsonify({"message": "Rejestracja zakończona sukcesem"}), 201
 
 
+# Logowanie klienta
 @app.route("/api/login", methods=["POST"])
 def login():
     try:
@@ -69,9 +73,8 @@ def login():
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
 
 
-
-def wymagana_autoryzacja(f):
-    def dekorator(*args, **kwargs):
+def require_authorization(f):
+    def wrapper(*args, **kwargs):
         token = None
 
         if "Authorization" in request.headers:
@@ -93,7 +96,93 @@ def wymagana_autoryzacja(f):
             return jsonify({"error": f"Błąd tokenu: {str(e)}"}), 401
 
         return f(aktualny_klient, *args, **kwargs)
-    return dekorator
+
+    wrapper.__name__ = f.__name__
+    return wrapper
+
+
+# Umów wizytę
+@app.route("/api/book-appointment", methods=["POST"])
+@require_authorization
+def book_appointment(aktualny_klient):
+    dane = request.json
+    id_pupila = dane.get("id_pupila")
+    id_weterynarza = dane.get("id_weterynarza")
+    data_wizyty = dane.get("data_wizyty")
+    godzina_wizyty_od = dane.get("godzina_wizyty_od")
+    cena = dane.get("cena")
+
+    if not all([id_pupila, id_weterynarza, data_wizyty, godzina_wizyty_od]):
+        return jsonify({"error": "Brak wymaganych danych"}), 400
+    
+    weterynarz = Weterynarze.query.filter_by(id_pracownika=id_weterynarza).first()
+    if not weterynarz:
+        return jsonify({"error": "Podany weterynarz nie istnieje"}), 404
+    
+    zwierzak = Zwierzak.query.filter_by(id_pupila=id_pupila, id_klienta=aktualny_klient.id_klienta).first()
+    if not zwierzak:
+        return jsonify({"error": "Pupil nie należy do tego klienta"}), 403
+
+    termin_zajety = Terminarz.query.join(WizytaWeterynarz).filter(
+        Terminarz.data_wizyty == datetime.strptime(data_wizyty, "%Y-%m-%d").date(),
+        Terminarz.godzina_wizyty_od == datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
+        WizytaWeterynarz.id_pracownika == id_weterynarza
+    ).first()
+    if termin_zajety:
+        return jsonify({"error": "Termin jest już zajęty dla tego weterynarza"}), 400
+
+    nowa_wizyta = Terminarz(
+        id_pupila=id_pupila,
+        data_wizyty=datetime.strptime(data_wizyty, "%Y-%m-%d"),
+        godzina_wizyty_od=datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
+        cena=cena
+    )
+    db.session.add(nowa_wizyta)
+    db.session.commit()
+
+    przypisanie_weterynarza = WizytaWeterynarz(
+        id_wizyty=nowa_wizyta.id_wizyty,
+        id_pracownika=id_weterynarza
+    )
+    db.session.add(przypisanie_weterynarza)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Wizyta została zarejestrowana",
+        "id_wizyty": nowa_wizyta.id_wizyty,
+        "id_weterynarza": id_weterynarza
+    }), 201
+
+
+# Dodaj zwierzaka
+@app.route("/api/add-pet", methods=["POST"])
+@require_authorization
+def add_pet(aktualny_klient):
+    dane = request.json
+    imie = dane.get("imie")
+    wiek = dane.get("wiek")
+    opis = dane.get("opis")
+    plec = dane.get("plec")
+    id_rasy = dane.get("id_rasy")
+
+    if not all([imie, wiek, id_rasy]):
+        return jsonify({"error": "Brak wymaganych danych"}), 400
+
+    nowy_zwierzak = Zwierzak(
+        imie=imie,
+        wiek=wiek,
+        opis=opis,
+        plec=plec,
+        id_klienta=aktualny_klient.id_klienta,
+        id_rasy=id_rasy
+    )
+    db.session.add(nowy_zwierzak)
+    db.session.commit()
+
+    return jsonify({"message": "Zwierzak został dodany", "id_pupila": nowy_zwierzak.id_pupila}), 201
+
+
+# METODY GET
 
 # Pobranie listy weterynarzy
 @app.route('/veterinarian-list', methods=['GET'])
@@ -245,3 +334,66 @@ def get_appointment_details():
     }
 
     return jsonify(result), 200
+
+
+@app.route("/api/vet-availability", methods=["GET"])
+def check_vet_availability():
+    data_wizyty = request.args.get("data_wizyty")
+    godzina_wizyty_od = request.args.get("godzina_wizyty_od")
+    id_weterynarza = request.args.get("id_weterynarza", type=int)
+
+    if not all([data_wizyty, godzina_wizyty_od, id_weterynarza]):
+        return jsonify({"error": "Brak wymaganych danych"}), 400
+
+    termin_zajety = Terminarz.query.join(WizytaWeterynarz).filter(
+        Terminarz.data_wizyty == datetime.strptime(data_wizyty, "%Y-%m-%d").date(),
+        Terminarz.godzina_wizyty_od == datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
+        WizytaWeterynarz.id_pracownika == id_weterynarza
+    ).first()
+
+    if termin_zajety:
+        return jsonify({"available": False, "message": "Termin jest zajęty"}), 200
+
+    return jsonify({"available": True, "message": "Termin jest dostępny"}), 200
+
+
+
+# Wyświetlanie danych zwierzaka
+@app.route("/api/pet-details/<int:pet_id>", methods=["GET"])
+@require_authorization
+def get_pet_details(aktualny_klient, pet_id):
+    zwierzak = Zwierzak.query.filter_by(id_pupila=pet_id, id_klienta=aktualny_klient.id_klienta).first()
+
+    if not zwierzak:
+        return jsonify({"error": "Zwierzak nie został znaleziony lub nie należy do tego klienta"}), 404
+
+    return jsonify({
+        "id_pupila": zwierzak.id_pupila,
+        "imie": zwierzak.imie,
+        "wiek": zwierzak.wiek,
+        "opis": zwierzak.opis,
+        "plec": zwierzak.plec,
+        "id_rasy": zwierzak.id_rasy
+    }), 200
+
+
+# METODY PUT
+
+# Edycja danych zwierzaka
+@app.route("/api/pet-details/<int:pet_id>/edit", methods=["PUT"])
+@require_authorization
+def edit_pet_details(aktualny_klient, pet_id):
+    dane = request.json
+    zwierzak = Zwierzak.query.filter_by(id_pupila=pet_id, id_klienta=aktualny_klient.id_klienta).first()
+
+    if not zwierzak:
+        return jsonify({"error": "Zwierzak nie został znaleziony lub nie należy do tego klienta"}), 404
+
+    zwierzak.imie = dane.get("imie", zwierzak.imie)
+    zwierzak.wiek = dane.get("wiek", zwierzak.wiek)
+    zwierzak.opis = dane.get("opis", zwierzak.opis)
+    zwierzak.plec = dane.get("plec", zwierzak.plec)
+    zwierzak.id_rasy = dane.get("id_rasy", zwierzak.id_rasy)
+
+    db.session.commit()
+    return jsonify({"message": "Zwierzak został zaktualizowany"}), 200

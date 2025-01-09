@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = "http://localhost:5000"
+url = "http://localhost:5000"
 
 headers = {
     "Content-Type": "application/json"
@@ -12,7 +12,7 @@ data = {
     "adres_email": "julia.portka@gmail.com",
     "haslo": "BubulekMika14"
 }
-r = requests.post(f"{BASE_URL}/api/login", headers=headers, json=data)
+r = requests.post(f"{url}/api/login", headers=headers, json=data)
 print("Status code:", r.status_code)
 print("Odpowiedź serwera:", r.json())
 
@@ -22,7 +22,7 @@ data = {
     "adres_email": "test@example.com",
     "haslo": "wrongpassword"
 }
-r = requests.post(f"{BASE_URL}/api/login", headers=headers, json=data)
+r = requests.post(f"{url}/api/login", headers=headers, json=data)
 print(r.json())
 print("Status code:", r.status_code)
 
@@ -32,13 +32,13 @@ data = {
     "adres_email": "notfound@example.com",
     "haslo": "doesnotmatter"
 }
-r = requests.post(f"{BASE_URL}/api/login", headers=headers, json=data)
+r = requests.post(f"{url}/api/login", headers=headers, json=data)
 print(r.json())
 print("Status code:", r.status_code)
 
 # 4. Test negatywny - Brak danych
 print("\n[Przypadek negatywny]: Brak danych logowania")
 data = {}
-r = requests.post(f"{BASE_URL}/api/login", headers=headers, json=data)
+r = requests.post(f"{url}/api/login", headers=headers, json=data)
 print(r.json())
 print("Status code:", r.status_code)

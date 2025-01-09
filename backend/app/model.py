@@ -1,6 +1,5 @@
 from main import db
 
-# Klinika and its related tables
 class Klinika(db.Model):
     _tablename_ = 'klinika'
     id_kliniki = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -21,7 +20,6 @@ class Wlasciciele(db.Model):
 
     klinika = db.relationship('Klinika', back_populates='wlasciciele')
 
-# Address-related tables
 class Adresy(db.Model):
     _tablename_ = 'adresy'
     id_adresu = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -34,7 +32,6 @@ class Adresy(db.Model):
     adresy_pracownicy = db.relationship('Pracownik', backref='adres', lazy=True)
     adresy_klienci = db.relationship('Klienci', backref='adres', lazy=True)
 
-# Postal Codes
 class Poczty(db.Model):
     _tablename_ = 'poczty'
     id_poczty = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -43,7 +40,6 @@ class Poczty(db.Model):
 
     poczty_adresy = db.relationship('Adresy', backref='poczta', lazy=True)
 
-# Employee-related tables
 class Pracownik(db.Model):
     _tablename_ = 'pracownik'
     id_pracownika = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -67,7 +63,6 @@ class PracownicyKliniki(db.Model):
     godziny_pracy_od = db.Column(db.DateTime, nullable=False)
     godziny_pracy_do = db.Column(db.DateTime, nullable=False)
 
-# Job-related tables
 class Stanowiska(db.Model):
     _tablename_ = 'stanowiska'
     id_stanowiska = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -76,7 +71,6 @@ class Stanowiska(db.Model):
 
     pracownicy = db.relationship('Pracownik', backref='stanowisko', lazy=True)
 
-# Veterinary-specific tables
 class Weterynarze(db.Model):
     _tablename_ = 'weterynarze'
     id_pracownika = db.Column(db.Integer, db.ForeignKey('pracownik.id_pracownika'), primary_key=True, nullable=False)
@@ -89,7 +83,6 @@ class WizytaWeterynarz(db.Model):
     id_wizyty = db.Column(db.Integer, db.ForeignKey('terminarz.id_wizyty'), primary_key=True, nullable=False)
     id_pracownika = db.Column(db.Integer, db.ForeignKey('weterynarze.id_pracownika'), primary_key=True, nullable=False)
 
-# Schedule-related tables
 class Terminarz(db.Model):
     _tablename_ = 'terminarz'
     id_wizyty = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -116,7 +109,6 @@ class SpotkanieDoleglosci(db.Model):
     id_wizyty = db.Column(db.Integer, db.ForeignKey('terminarz.id_wizyty'), primary_key=True, nullable=False)
     id_doleglosci = db.Column(db.Integer, db.ForeignKey('doleglosci.id_doleglosci'), primary_key=True, nullable=False)
 
-# Client and Animal-related tables
 class Klienci(db.Model):
     _tablename_ = 'klienci'
     id_klienta = db.Column(db.Integer, primary_key=True, nullable=False)
