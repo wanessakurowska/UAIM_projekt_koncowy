@@ -76,6 +76,7 @@ class Weterynarze(db.Model):
     id_pracownika = db.Column(db.Integer, db.ForeignKey('pracownik.id_pracownika'), primary_key=True, nullable=False)
     doswiadczenie = db.Column(db.String(150), nullable=False)
     kwalifikacje = db.Column(db.String(100), nullable=False)
+    ocena = db.Column(db.Numeric(2,1))
     status = db.Column(db.String(20))
 
 class WizytaWeterynarz(db.Model):
