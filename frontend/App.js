@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Services from "./pages/Services";
 import Login from "./pages/Login";
 import Veterinarians from "./pages/Veterinarians";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/veterinarians" element={<Veterinarians />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );

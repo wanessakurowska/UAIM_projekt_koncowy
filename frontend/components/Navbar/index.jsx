@@ -22,10 +22,8 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-
     const event = new Event("logout");
     window.dispatchEvent(event);
-
     window.location.href = "/login";
   };
 
@@ -45,6 +43,11 @@ const Navbar = () => {
             <Link to="/login">Zaloguj</Link>
           )}
         </li>
+        {!isLoggedIn && (
+          <li>
+            <Link to="/register">Zarejestruj się</Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
