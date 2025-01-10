@@ -37,6 +37,11 @@ const Navbar = () => {
         <li>
           <Link to="/veterinarians">Lekarze</Link>
         </li>
+        {isLoggedIn && (
+          <li>
+            <Link to="/add-pet">Dodaj Zwierzaka</Link>
+          </li>
+        )}
       </ul>
       <ul className="navbar-list right-links">
         {isLoggedIn ? (

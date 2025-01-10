@@ -1,8 +1,8 @@
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
-from datetime import datetime, timedelta, timezone
-from model import Weterynarze, Pracownik, Klinika, Uslugi, Terminarz, Zwierzak, WizytaUslugi, WizytaWeterynarz, Klienci
+from datetime import datetime, timedelta
+from model import Weterynarze, Pracownik, Klinika, Uslugi, Terminarz, Zwierzak, WizytaUslugi, WizytaWeterynarz, Klienci, Rasa
 from main import app, db
 
 
@@ -374,6 +374,20 @@ def get_pet_details(aktualny_klient, pet_id):
         "plec": zwierzak.plec,
         "id_rasy": zwierzak.id_rasy
     }), 200
+
+
+# Endpoint do pobrania listy ras
+@app.route("/api/races", methods=["GET"])
+def get_races():
+    try:
+        rasy = Rasa.query.all()
+        if not rasy:
+            return jsonify({"error": "Brak ras w bazie danych."}), 404
+        wynik = [{"id_rasy": rasa.id_rasy, "nazwa": rasa.nazwa} for rasa in rasy]
+        return jsonify(wynik), 200
+    except Exception as e:
+        print(f"Błąd podczas pobierania ras: {e}")
+        return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
 
 
 # METODY PUT
