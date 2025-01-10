@@ -10,7 +10,7 @@ const Veterinarians = () => {
   useEffect(() => {
     const fetchVeterinarians = async () => {
       try {
-        const response = await apiClient.get("/veterinarian-list");
+        const response = await apiClient.get("/veterinarian-list"); // Endpoint backendu
         setVeterinarians(response.data);
       } catch (err) {
         console.error("Błąd podczas pobierania lekarzy:", err);
@@ -44,7 +44,6 @@ const Veterinarians = () => {
               <th>Nazwisko</th>
               <th>Doświadczenie</th>
               <th>Kwalifikacje</th>
-              <th>Ocena</th>
               <th>Status</th>
               <th>Klinika</th>
             </tr>
@@ -54,9 +53,8 @@ const Veterinarians = () => {
               <tr key={vet.id}>
                 <td>{vet.imię}</td>
                 <td>{vet.nazwisko}</td>
-                <td>{vet.doświadczenie}</td>
+                <td>{vet.doświadczenie} lat</td>
                 <td>{vet.kwalifikacje}</td>
-                <td>{vet.ocena}</td>
                 <td>{vet.status}</td>
                 <td>{vet.klinika || "Brak danych"}</td>
               </tr>
