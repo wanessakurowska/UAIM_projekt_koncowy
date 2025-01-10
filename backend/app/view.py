@@ -110,7 +110,7 @@ def book_appointment(aktualny_klient):
     id_weterynarza = dane.get("id_weterynarza")
     data_wizyty = dane.get("data_wizyty")
     godzina_wizyty_od = dane.get("godzina_wizyty_od")
-    cena = dane.get("cena")
+    id_uslug = dane.get("id_uslug")
 
     if not all([id_pupila, id_weterynarza, data_wizyty, godzina_wizyty_od]):
         return jsonify({"error": "Brak wymaganych danych"}), 400
@@ -134,11 +134,19 @@ def book_appointment(aktualny_klient):
     nowa_wizyta = Terminarz(
         id_pupila=id_pupila,
         data_wizyty=datetime.strptime(data_wizyty, "%Y-%m-%d"),
-        godzina_wizyty_od=datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
-        cena=cena
+        godzina_wizyty_od=datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M")
     )
     db.session.add(nowa_wizyta)
     db.session.commit()
+
+    # Przypisanie usług do wizyty w tabeli WizytaUslugi
+    for id_uslugi in id_uslug:
+        usluga = Uslugi.query.get(id_uslugi)
+        if not usluga:
+            return jsonify({"error": "Usługa o tym ID nie istnieje"}), 404
+
+        przypisanie_uslugi = WizytaUslugi(id_wizyty=nowa_wizyta.id_wizyty, powod_wizyty=id_uslugi)
+        db.session.add(przypisanie_uslugi)
 
     przypisanie_weterynarza = WizytaWeterynarz(
         id_wizyty=nowa_wizyta.id_wizyty,
@@ -146,11 +154,12 @@ def book_appointment(aktualny_klient):
     )
     db.session.add(przypisanie_weterynarza)
     db.session.commit()
-
+    
     return jsonify({
         "message": "Wizyta została zarejestrowana",
         "id_wizyty": nowa_wizyta.id_wizyty,
-        "id_weterynarza": id_weterynarza
+        "id_weterynarza": id_weterynarza,
+        "id_uslug": id_uslug
     }), 201
 
 
@@ -205,6 +214,7 @@ def get_veterinarians():
                 "nazwisko": pracownik.nazwisko,
                 "doświadczenie": weterynarz.doswiadczenie,
                 "kwalifikacje": weterynarz.kwalifikacje,
+                "ocena": weterynarz.ocena,
                 "status": weterynarz.status,
                 "klinika": klinika.nazwa if klinika else None
             })
@@ -236,33 +246,20 @@ def get_services():
 
 # Pobieranie historii wizyt użytkownika
 @app.route('/client-appointments', methods=['GET'])
-def get_client_appointments():
-    # Pobierz klient_id z parametrów żądania
-    klient_id = request.args.get('klient_id', type=int)
-    if not klient_id:
-        return jsonify({
-            "error": "Parametr 'klient_id' jest wymagany."
-        }), 400
-    
-    # Pobierz klienta
-    klient = Klienci.query.get(klient_id)
-    if not klient:
-        return jsonify({
-            "error": "Nie znaleziono klienta o podanym ID."
-        }), 404
-
-    # Pobierz wszystkie zwierzaki klienta
-    zwierzaki = Zwierzak.query.filter_by(id_klienta=klient_id).all()
+@require_authorization
+def get_client_appointments(aktualny_klient):
+    # Pobierz wszystkie zwierzaki aktualnego klienta
+    zwierzaki = Zwierzak.query.filter_by(id_klienta=aktualny_klient.id_klienta).all()
     if not zwierzaki:
         return jsonify({
-            "error": "Nie znaleziono zwierzaków dla podanego klienta."
+            "error": "Nie znaleziono zwierzaków dla zalogowanego klienta."
         }), 404
 
     # Pobierz wszystkie wizyty dla zwierzaków klienta
     wizyty = Terminarz.query.filter(Terminarz.id_pupila.in_([z.id_pupila for z in zwierzaki])).all()
     if not wizyty:
         return jsonify({
-            "error": "Brak wizyt dla podanego klienta."
+            "error": "Brak wizyt dla zalogowanego klienta."
         }), 404
 
     # Przetwarzanie wyników
@@ -281,7 +278,8 @@ def get_client_appointments():
 
 # Pobieranie szczegółów wizyty na podstawie ID
 @app.route('/appointment-details', methods=['GET'])
-def get_appointment_details():
+@require_authorization
+def get_appointment_details(aktualny_klient):
     # Pobierz wizyta_id z parametrów żądania
     wizyta_id = request.args.get('wizyta_id', type=int)
     if not wizyta_id:
@@ -307,7 +305,9 @@ def get_appointment_details():
     usluga_szczegoly = [
         {
             "id_uslugi": usluga.powod_wizyty,
-            "nazwa": Uslugi.query.get(usluga.powod_wizyty).nazwa
+            "nazwa": Uslugi.query.get(usluga.powod_wizyty).nazwa,
+            "opis": Uslugi.query.get(usluga.powod_wizyty).opis,
+            "cena": float(Uslugi.query.get(usluga.powod_wizyty).cena)
         }
         for usluga in uslugi
     ]
@@ -327,7 +327,6 @@ def get_appointment_details():
         "id_wizyty": wizyta.id_wizyty,
         "data_wizyty": wizyta.data_wizyty.strftime('%Y-%m-%d'),
         "godzina_wizyty_od": wizyta.godzina_wizyty_od.strftime('%H:%M'),
-        "cena": float(wizyta.cena) if wizyta.cena else None,
         "imie_pupila": zwierzak.imie,
         "uslugi": usluga_szczegoly,
         "weterynarze": weterynarz_szczegoly

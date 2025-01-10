@@ -67,10 +67,12 @@ def init_data():
     db.session.commit()
 
     #weterynarze
-    weterynarz1 = Weterynarze(id_pracownika=pracownik1.id_pracownika, doswiadczenie="5 lat w weterynarii",
-                              kwalifikacje="Specjalista w chirurgii", status="Aktywny")
+    weterynarz1 = Weterynarze(id_pracownika=pracownik1.id_pracownika, doswiadczenie="10 lat w weterynarii",
+                              kwalifikacje="Specjalista w chirurgii", ocena=4.0, status="Aktywny")
+    weterynarz2 = Weterynarze(id_pracownika=pracownik2.id_pracownika, doswiadczenie="2 lata w weterynarii",
+                              kwalifikacje="Asystentka", ocena=4.5, status="Aktywny")
 
-    db.session.add(weterynarz1)
+    db.session.add_all([weterynarz1, weterynarz2])
     db.session.commit()
 
     #pracownicy_kliniki
@@ -118,9 +120,9 @@ def init_data():
 
     #terminarz
     terminarz1 = Terminarz(data_wizyty=datetime(2025, 2, 15), godzina_wizyty_od=datetime(2025, 2, 15, 10, 0),
-                           cena=100.00, id_pupila=zwierzak1.id_pupila)
+                           id_pupila=zwierzak1.id_pupila)
     terminarz2 = Terminarz(data_wizyty=datetime(2025, 2, 16), godzina_wizyty_od=datetime(2025, 2, 16, 11, 0),
-                           cena=150.00, id_pupila=zwierzak1.id_pupila)
+                           id_pupila=zwierzak1.id_pupila)
 
     db.session.add_all([terminarz1, terminarz2])
     db.session.commit()
@@ -197,7 +199,7 @@ def show_data():
     # Weterynarze
     print("Weterynarze:")
     for weterynarz in Weterynarze.query.all():
-        print(f"ID Pracownika: {weterynarz.id_pracownika}, Doświadczenie: {weterynarz.doswiadczenie}, Kwalifikacje: {weterynarz.kwalifikacje}, Status: {weterynarz.status}")
+        print(f"ID Pracownika: {weterynarz.id_pracownika}, Doświadczenie: {weterynarz.doswiadczenie}, Kwalifikacje: {weterynarz.kwalifikacje}, Ocena: {weterynarz.ocena}, Status: {weterynarz.status}")
     print()
 
     # Klienci
@@ -227,7 +229,7 @@ def show_data():
     # Terminarz
     print("Terminarz:")
     for terminarz in Terminarz.query.all():
-        print(f"ID Wizyty: {terminarz.id_wizyty}, Data Wizyty: {terminarz.data_wizyty}, Godzina Wizyty: {terminarz.godzina_wizyty_od}, Cena: {terminarz.cena}, ID Pupila: {terminarz.id_pupila}")
+        print(f"ID Wizyty: {terminarz.id_wizyty}, Data Wizyty: {terminarz.data_wizyty}, Godzina Wizyty: {terminarz.godzina_wizyty_od}, ID Pupila: {terminarz.id_pupila}")
     print()
 
     # Wizyty Weterynarzy

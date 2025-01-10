@@ -89,7 +89,6 @@ class Terminarz(db.Model):
     id_wizyty = db.Column(db.Integer, primary_key=True, nullable=False)
     data_wizyty = db.Column(db.Date, nullable=False)
     godzina_wizyty_od = db.Column(db.DateTime, nullable=False)
-    cena = db.Column(db.Numeric(5, 2))
     id_pupila = db.Column(db.Integer, db.ForeignKey('zwierzak.id_pupila'), nullable=False)
 
 class Uslugi(db.Model):

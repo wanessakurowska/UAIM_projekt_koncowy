@@ -1,7 +1,7 @@
 import requests
 
 url = "http://localhost:5000"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NDcwMzc3fQ.wUvTpfP7YqSSoCo5Bevo8r-Q90re__gSRWmGB3TZ3IQ"
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NTU0MjA1fQ.cQBze2XrB5ReVcgbO7N81EvqzeKrRxJeUgGrZi5x7BI"
 # Token uzyskany poprzez zalogowanie klientki Julia Portka
 
 headers = {
@@ -34,21 +34,21 @@ print("\n[Przypadek pozytywny]: Rezerwacja wizyty")
 data = {
     "id_pupila": 3, 
     "id_weterynarza": 1,
-    "data_wizyty": "2025-01-15",
-    "godzina_wizyty_od": "2025-01-15T10:00",
-    "cena": 150.00
+    "data_wizyty": "2025-01-16",
+    "godzina_wizyty_od": "2025-01-16T10:00",
+    "id_uslug": [1, 2]
 }
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
 print("Status code:", r.status_code)
 print("Odpowiedź serwera:", r.json())
 
-print("\n[Przypadek negatywny]: Klient (okreśłony tokenem) nie jest właścicielem zwierzaka")
+print("\n[Przypadek negatywny]: Klient (określony tokenem) nie jest właścicielem zwierzaka")
 data = {
     "id_pupila": 2, 
     "id_weterynarza": 1,
     "data_wizyty": "2025-01-18",
     "godzina_wizyty_od": "2025-01-13T10:00",
-    "cena": 80.00
+    "id_uslug": [2]
 }
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
 print("Status code:", r.status_code)
@@ -61,7 +61,7 @@ data = {
     "id_weterynarza": 9999,
     "data_wizyty": "2025-01-15",
     "godzina_wizyty_od": "2025-01-15T10:00",
-    "cena": 200.00
+    "id_uslug": [2]
 }
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
 print("Status code:", r.status_code)
@@ -74,13 +74,13 @@ data = {
     "id_weterynarza": 1,
     "data_wizyty": "2025-01-15",
     "godzina_wizyty_od": "2025-01-15T10:00",
-    "cena": 150.00
+    "id_uslug": [2]
 }
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
 print("Status code:", r.status_code)
 print("Odpowiedź serwera:", r.json())
 
-# Przykład negatywny: brak tokentu
+# Przykład negatywny: brak tokenu
 print("\n[Przypadek negatywny]: Rezerwacja wizyty bez tokenu")
 headers.pop("Authorization")
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
