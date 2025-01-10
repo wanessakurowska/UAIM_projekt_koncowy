@@ -484,7 +484,6 @@ def edit_pet_details(aktualny_klient, pet_id):
     zwierzak.wiek = dane.get("wiek", zwierzak.wiek)
     zwierzak.opis = dane.get("opis", zwierzak.opis)
     zwierzak.plec = dane.get("plec", zwierzak.plec)
-    zwierzak.id_rasy = dane.get("id_rasy", zwierzak.id_rasy)
 
     db.session.commit()
     return jsonify({"message": "Zwierzak został zaktualizowany"}), 200

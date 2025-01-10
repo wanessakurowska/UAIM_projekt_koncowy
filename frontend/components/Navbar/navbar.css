@@ -41,7 +41,6 @@
   padding: 0;
 }
 
-/* Styl przycisku jako linka */
 .link-button {
   background: none;
   border: none;
@@ -52,8 +51,6 @@
   padding: 0;
 }
 
-/* Hover dla przycisku */
 .link-button:hover {
   text-decoration: underline;
 }
-

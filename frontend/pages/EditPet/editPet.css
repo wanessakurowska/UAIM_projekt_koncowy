@@ -1,0 +1,37 @@
+.edit-pet-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.edit-pet-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-pet-container label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+}
+
+.edit-pet-container input,
+.edit-pet-container textarea,
+.edit-pet-container select {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.edit-pet-container button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.edit-pet-container button:hover {
+    background-color: #0056b3;
+}

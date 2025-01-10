@@ -32,9 +32,9 @@ const Navbar = () => {
 
   const handleProtectedLink = () => {
     if (!isLoggedIn) {
-      navigate("/login"); // Przenieś na stronę logowania, jeśli użytkownik nie jest zalogowany
+      navigate("/login");
     } else {
-      navigate("/appointment-calendar"); // Przenieś na stronę rezerwacji, jeśli użytkownik jest zalogowany
+      navigate("/appointment-calendar");
     }
   };
 
@@ -56,6 +56,9 @@ const Navbar = () => {
           <>
             <li>
               <Link to="/add-pet">Dodaj Zwierzaka</Link>
+            </li>
+            <li>
+              <Link to="/my-pets">Moje Zwierzaki</Link>
             </li>
             <li>
               <Link to="/completed-appointments">Wizyty</Link>
