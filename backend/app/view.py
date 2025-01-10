@@ -111,8 +111,9 @@ def book_appointment(aktualny_klient):
     data_wizyty = dane.get("data_wizyty")
     godzina_wizyty_od = dane.get("godzina_wizyty_od")
     id_uslugi = dane.get("id_uslugi")
+    opis_dolegliwosci = dane.get("opis_dolegliwosci")
 
-    if not all([id_pupila, id_weterynarza, data_wizyty, godzina_wizyty_od]):
+    if not all([id_pupila, id_weterynarza, data_wizyty, godzina_wizyty_od, id_uslugi, opis_dolegliwosci]):
         return jsonify({"error": "Brak wymaganych danych"}), 400
     
     weterynarz = Weterynarze.query.filter_by(id_pracownika=id_weterynarza).first()
@@ -139,7 +140,8 @@ def book_appointment(aktualny_klient):
         id_pupila=id_pupila,
         data_wizyty=datetime.strptime(data_wizyty, "%Y-%m-%d"),
         godzina_wizyty_od=datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
-        id_uslugi=id_uslugi
+        id_uslugi=id_uslugi,
+        opis_dolegliwosci=opis_dolegliwosci
     )
     db.session.add(nowa_wizyta)
     db.session.commit()
@@ -155,7 +157,9 @@ def book_appointment(aktualny_klient):
         "message": "Wizyta została zarejestrowana",
         "id_wizyty": nowa_wizyta.id_wizyty,
         "id_weterynarza": id_weterynarza,
-        "id_uslugi": id_uslugi
+        "id_uslugi": id_uslugi,
+        "id_pupila": id_pupila,
+        "opis_dolegliwosci": opis_dolegliwosci
     }), 201
 
 
@@ -383,6 +387,29 @@ def get_races():
     except Exception as e:
         print(f"Błąd podczas pobierania ras: {e}")
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
+
+# Endpoint do pobrania listy pupili zalogowanego użytkownika
+@app.route("/api/my-pets", methods=["GET"])
+@require_authorization
+def get_my_pets(aktualny_klient):
+    # Pobierz zwierzaki należące do zalogowanego klienta
+    zwierzaki = Zwierzak.query.filter_by(id_klienta=aktualny_klient.id_klienta).all()
+    if not zwierzaki:
+        return jsonify({"error": "Nie znaleziono pupili dla zalogowanego użytkownika."}), 404
+
+    # Przetwórz dane zwierzaków
+    wynik = [
+        {
+            "id_pupila": zwierzak.id_pupila,
+            "imie": zwierzak.imie,
+            "opis": zwierzak.opis,
+            "wiek": zwierzak.wiek,
+            "plec": zwierzak.plec,
+            "rasa": zwierzak.rasa.nazwa if zwierzak.rasa else "Nieznana rasa",
+        }
+        for zwierzak in zwierzaki
+    ]
+    return jsonify(wynik), 200
 
 # METODY PUT
 

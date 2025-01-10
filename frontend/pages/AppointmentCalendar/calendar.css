@@ -1,0 +1,61 @@
+.calendar-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.calendar-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calendar-container label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.calendar-container input,
+.calendar-container select,
+.calendar-container button {
+  padding: 5px;
+  font-size: 16px;
+}
+
+.calendar-container button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.calendar-container .success,
+.calendar-container .error {
+  color: green; /* Dla .error zmieni się na red */
+  font-weight: bold;
+  text-align: center; /* Wyśrodkowanie tekstu */
+  margin: 10px 0; /* Dystans od innych elementów */
+}
+
+
+.calendar-container .success {
+  color: green;
+  font-weight: bold;
+}
+
+.calendar-container .error {
+  color: red;
+}
+
+.calendar-container textarea {
+  resize: none;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+  font-size: 16px;
+}
+

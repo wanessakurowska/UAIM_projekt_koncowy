@@ -91,6 +91,7 @@ class Terminarz(db.Model):
     godzina_wizyty_od = db.Column(db.DateTime, nullable=False)
     id_pupila = db.Column(db.Integer, db.ForeignKey('zwierzak.id_pupila'), nullable=False)
     id_uslugi = db.Column(db.Integer, db.ForeignKey('uslugi.id_uslugi'), nullable=False)
+    opis_dolegliwosci = db.Column(db.String(500))
 
     usluga = db.relationship('Uslugi', backref='terminy', lazy=True)
 
@@ -101,11 +102,6 @@ class Uslugi(db.Model):
     opis = db.Column(db.String(200))
     cena = db.Column(db.Numeric(5, 2))
     dostepnosc = db.Column(db.String(20))
-
-class SpotkanieDoleglosci(db.Model):
-    _tablename_ = 'spotkanie_doleglosci'
-    id_wizyty = db.Column(db.Integer, db.ForeignKey('terminarz.id_wizyty'), primary_key=True, nullable=False)
-    id_doleglosci = db.Column(db.Integer, db.ForeignKey('doleglosci.id_doleglosci'), primary_key=True, nullable=False)
 
 class Klienci(db.Model):
     _tablename_ = 'klienci'
@@ -137,10 +133,3 @@ class Rasa(db.Model):
     cechy_charakterystyczne = db.Column(db.String(2000))
 
     zwierzaki = db.relationship('Zwierzak', backref='rasa', lazy=True)
-
-class Doleglosci(db.Model):
-    _tablename_ = 'doleglosci'
-    id_doleglosci = db.Column(db.Integer, primary_key=True, nullable=False)
-    nazwa = db.Column(db.String(50), nullable=False)
-    opis = db.Column(db.String(200))
-    sposob_leczenia = db.Column(db.String(200), nullable=False)

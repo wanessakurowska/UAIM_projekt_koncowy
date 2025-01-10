@@ -40,3 +40,20 @@
   font: inherit;
   padding: 0;
 }
+
+/* Styl przycisku jako linka */
+.link-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: inherit;
+  text-decoration: none;
+  padding: 0;
+}
+
+/* Hover dla przycisku */
+.link-button:hover {
+  text-decoration: underline;
+}
+

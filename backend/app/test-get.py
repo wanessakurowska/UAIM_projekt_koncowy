@@ -2,7 +2,7 @@ import requests
 import json
 
 url = "http://localhost:5000"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NjA3NTczfQ.84CAYOjEOKAoHV0pDrsoIo_HeIOyiDtk29agwSNwSn8"
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NjE3MDYyfQ.gjuV7wGnNx-4eRrKu8JajXS-xqIx43dcS3U4Zr0VcsI"
 # Token uzyskany poprzez zalogowanie klientki Julia Portka
 
 headers = {
@@ -93,6 +93,15 @@ print("TEST POZYTYWNY DLA GET client-appointments")
 # Przykład pozytywny: poprawny token 
 print("[Przypadek pozytywny] klient istnieje:")
 r = requests.get(f"{url}/client-appointments", headers=headers, params=params)
+print(json.dumps(r.json(), indent=4, ensure_ascii=False))
+print(r.status_code)
+
+#TEST POZYTYWNY DLA GET /api/my-pets
+print("TEST POZYTYWNY DLA GET /api/my-pets")
+
+# Przykład pozytywny: poprawny token 
+print("[Przypadek pozytywny] klient istnieje:")
+r = requests.get(f"{url}/api/my-pets", headers=headers, params=params)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 

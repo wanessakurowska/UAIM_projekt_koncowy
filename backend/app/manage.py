@@ -1,5 +1,5 @@
 from model import Klinika, Adresy, Poczty, Wlasciciele, Pracownik, Stanowiska, Terminarz, Weterynarze, Klienci, \
-    Zwierzak, Rasa, Doleglosci, WizytaWeterynarz, SpotkanieDoleglosci, PracownicyKliniki, Uslugi
+    Zwierzak, Rasa, WizytaWeterynarz, PracownicyKliniki, Uslugi
 from datetime import datetime
 from main import app, db
 from werkzeug.security import generate_password_hash
@@ -109,15 +109,6 @@ def init_data():
     db.session.add_all([zwierzak1, zwierzak2])
     db.session.commit()
 
-    #doleglosci
-    doleglosc1 = Doleglosci(nazwa="Katar", opis="Zakażenie górnych dróg oddechowych",
-                            sposob_leczenia="Leczenie objawowe, odpoczynek")
-    doleglosc2 = Doleglosci(nazwa="Ból brzucha", opis="Problemy żołądkowe, ból brzucha",
-                            sposob_leczenia="Zmiana diety, leki przeciwbólowe")
-
-    db.session.add_all([doleglosc1, doleglosc2])
-    db.session.commit()
-
     #uslugi
     usluga1 = Uslugi(nazwa="Badanie kontrolne", opis="Standardowe badanie stanu zdrowia", cena=100.00, dostepnosc="Dostępna")
     usluga2 = Uslugi(nazwa="Szczepienie", opis="Podanie szczepionki ochronnej", cena=80.00, dostepnosc="Dostępna")
@@ -129,9 +120,9 @@ def init_data():
 
     #terminarz
     terminarz1 = Terminarz(data_wizyty=datetime(2025, 2, 15), godzina_wizyty_od=datetime(2025, 2, 15, 10, 0),
-                           id_pupila=zwierzak1.id_pupila, id_uslugi=usluga1.id_uslugi)
+                           id_pupila=zwierzak1.id_pupila, id_uslugi=usluga1.id_uslugi, opis_dolegliwosci="Ból brzucha")
     terminarz2 = Terminarz(data_wizyty=datetime(2025, 2, 16), godzina_wizyty_od=datetime(2025, 2, 16, 11, 0),
-                           id_pupila=zwierzak1.id_pupila, id_uslugi=usluga2.id_uslugi)
+                           id_pupila=zwierzak1.id_pupila, id_uslugi=usluga2.id_uslugi, opis_dolegliwosci="Katar")
 
     db.session.add_all([terminarz1, terminarz2])
     db.session.commit()
@@ -141,13 +132,6 @@ def init_data():
     wizyta_weterynarz2 = WizytaWeterynarz(id_wizyty=terminarz2.id_wizyty, id_pracownika=weterynarz1.id_pracownika)
 
     db.session.add_all([wizyta_weterynarz1, wizyta_weterynarz2])
-    db.session.commit()
-
-    #spotkanie_dol
-    spotkanie_doleglosci1 = SpotkanieDoleglosci(id_wizyty=terminarz1.id_wizyty, id_doleglosci=doleglosc1.id_doleglosci)
-    spotkanie_doleglosci2 = SpotkanieDoleglosci(id_wizyty=terminarz2.id_wizyty, id_doleglosci=doleglosc2.id_doleglosci)
-
-    db.session.add_all([spotkanie_doleglosci1, spotkanie_doleglosci2])
     db.session.commit()
 
 @app.cli.command("show_data")
@@ -212,16 +196,10 @@ def show_data():
         print(f"ID: {rasa.id_rasy}, Nazwa: {rasa.nazwa}, Nazwa Długa: {rasa.nazwa_dluga}, Cechy Charakterystyczne: {rasa.cechy_charakterystyczne}")
     print()
 
-    # Dolegliwości
-    print("Dolegliwości:")
-    for doleglosc in Doleglosci.query.all():
-        print(f"ID: {doleglosc.id_doleglosci}, Nazwa: {doleglosc.nazwa}, Opis: {doleglosc.opis}, Sposób Leczenia: {doleglosc.sposob_leczenia}")
-    print()
-
     # Terminarz
     print("Terminarz:")
     for terminarz in Terminarz.query.all():
-        print(f"ID Wizyty: {terminarz.id_wizyty}, Data Wizyty: {terminarz.data_wizyty}, Godzina Wizyty: {terminarz.godzina_wizyty_od}, ID Pupila: {terminarz.id_pupila}, ID Usługi: {terminarz.id_uslugi}")
+        print(f"ID Wizyty: {terminarz.id_wizyty}, Data Wizyty: {terminarz.data_wizyty}, Godzina Wizyty: {terminarz.godzina_wizyty_od}, ID Pupila: {terminarz.id_pupila}, ID Usługi: {terminarz.id_uslugi}, Dolegliwości: {terminarz.opis_dolegliwosci}")
     print()
 
     # Wizyty Weterynarzy
@@ -234,10 +212,4 @@ def show_data():
     print("Uslugi:")
     for usluga in Uslugi.query.all():
         print(f"ID Uslugi: {usluga.id_uslugi}, Nazwa Uslugi: {usluga.nazwa}, Opis Uslugi: {usluga.opis}, Cena Uslugi: {usluga.cena}, Dostepnosc Uslugi: {usluga.dostepnosc}")
-    print()
-
-    # Spotkania Dolegliwości
-    print("Spotkania Dolegliwości:")
-    for spotkanie in SpotkanieDoleglosci.query.all():
-        print(f"ID Wizyty: {spotkanie.id_wizyty}, ID Dolegliwości: {spotkanie.id_doleglosci}")
     print()

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const updateLoginStatus = () => {
@@ -21,11 +22,20 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setIsLoggedIn(false);
 
     const event = new Event("logout");
     window.dispatchEvent(event);
 
     window.location.href = "/login";
+  };
+
+  const handleProtectedLink = () => {
+    if (!isLoggedIn) {
+      navigate("/login"); // Przenieś na stronę logowania, jeśli użytkownik nie jest zalogowany
+    } else {
+      navigate("/appointment-calendar"); // Przenieś na stronę rezerwacji, jeśli użytkownik jest zalogowany
+    }
   };
 
   return (
@@ -36,6 +46,11 @@ const Navbar = () => {
         </li>
         <li>
           <Link to="/veterinarians">Lekarze</Link>
+        </li>
+        <li>
+          <button onClick={handleProtectedLink} className="link-button">
+            Rezerwacja wizyty
+          </button>
         </li>
         {isLoggedIn && (
           <li>

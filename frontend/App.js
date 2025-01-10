@@ -4,13 +4,14 @@ import Navbar from "./components/Navbar";
 import Services from "./pages/Services";
 import Login from "./pages/Login";
 import Veterinarians from "./pages/Veterinarians";
+import AppointmentCalendar from "./pages/AppointmentCalendar";
 import Register from "./pages/Register";
 import AddPet from "./pages/AddPet";
 
 const PrivateRoute = ({ children }) => {
-    const token = localStorage.getItem("token");
-    return token ? children : <Navigate to="/login" />;
-  };  
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/login" />;
+};  
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/services" element={<Services />} />
         <Route path="/veterinarians" element={<Veterinarians />} />
+        <Route path="/appointment-calendar" element={<AppointmentCalendar />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
@@ -29,7 +31,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
       </Routes>
     </Router>
   );
