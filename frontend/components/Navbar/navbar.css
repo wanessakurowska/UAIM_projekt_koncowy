@@ -1,28 +1,42 @@
 .navbar {
-    background-color: #f8f9fa;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .navbar-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 20px;
-  }
-  
-  .navbar-list li {
-    display: inline;
-  }
-  
-  .navbar-list a {
-    text-decoration: none;
-    color: #007bff;
-    font-size: 16px;
-  }
-  
-  .navbar-list a:hover {
-    text-decoration: underline;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 10px 20px;
+}
+
+.navbar-list {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.left-links {
+  justify-content: flex-start;
+}
+
+.right-links {
+  margin-left: auto;
+}
+
+.navbar-list a,
+.logout-link {
+  text-decoration: none;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.navbar-list a:hover,
+.logout-link:hover {
+  text-decoration: underline;
+}
+
+.logout-link {
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 0;
+}

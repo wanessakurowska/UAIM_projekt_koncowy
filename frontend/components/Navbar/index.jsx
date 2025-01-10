@@ -21,32 +21,39 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setIsLoggedIn(false);
+
     const event = new Event("logout");
     window.dispatchEvent(event);
+
     window.location.href = "/login";
   };
 
   return (
     <nav className="navbar">
-      <ul className="navbar-list">
+      <ul className="navbar-list left-links">
         <li>
           <Link to="/services">Katalog usług</Link>
         </li>
         <li>
           <Link to="/veterinarians">Lekarze</Link>
         </li>
-        <li>
-          {isLoggedIn ? (
-            <button onClick={handleLogout}>Wyloguj</button>
-          ) : (
-            <Link to="/login">Zaloguj</Link>
-          )}
-        </li>
-        {!isLoggedIn && (
+      </ul>
+      <ul className="navbar-list right-links">
+        {isLoggedIn ? (
           <li>
-            <Link to="/register">Zarejestruj się</Link>
+            <span className="logout-link" onClick={handleLogout}>
+              Wyloguj
+            </span>
           </li>
+        ) : (
+          <>
+            <li>
+              <Link to="/login">Zaloguj</Link>
+            </li>
+            <li>
+              <Link to="/register">Zarejestruj</Link>
+            </li>
+          </>
         )}
       </ul>
     </nav>
