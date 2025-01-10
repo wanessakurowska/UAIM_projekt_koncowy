@@ -5,6 +5,7 @@ import Services from "./pages/Services";
 import Login from "./pages/Login";
 import Veterinarians from "./pages/Veterinarians";
 import AppointmentCalendar from "./pages/AppointmentCalendar";
+import CompletedAppointments from "./pages/CompletedAppointments";
 import Register from "./pages/Register";
 import AddPet from "./pages/AddPet";
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/veterinarians" element={<Veterinarians />} />
         <Route path="/appointment-calendar" element={<AppointmentCalendar />} />
+        <Route path="/completed-appointments" element={<CompletedAppointments/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route

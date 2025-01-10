@@ -411,6 +411,63 @@ def get_my_pets(aktualny_klient):
     ]
     return jsonify(wynik), 200
 
+# Endpoint do pobierania zrealizowanych wizyt
+@app.route("/api/completed-appointments", methods=["GET"])
+@require_authorization
+def get_completed_appointments(aktualny_klient):
+    try:
+        # Pobierz id_pupila z parametrów zapytania
+        id_pupila = request.args.get("id_pupila", type=int)
+
+        # Pobierz wizyty powiązane z klientem
+        query = (
+            Terminarz.query.join(WizytaWeterynarz, Terminarz.id_wizyty == WizytaWeterynarz.id_wizyty)
+            .join(Pracownik, WizytaWeterynarz.id_pracownika == Pracownik.id_pracownika)
+            .join(Uslugi, Terminarz.id_uslugi == Uslugi.id_uslugi)
+            .join(Zwierzak, Terminarz.id_pupila == Zwierzak.id_pupila)
+            .filter(Terminarz.id_pupila.in_([z.id_pupila for z in aktualny_klient.zwierzaki]))
+            .filter(Terminarz.data_wizyty < datetime.utcnow().date())  # Wizyty zrealizowane (w przeszłości)
+            .order_by(Terminarz.data_wizyty, Terminarz.godzina_wizyty_od)
+        )
+
+        # Dodaj filtr dla konkretnego pupila, jeśli jest podany
+        if id_pupila:
+            query = query.filter(Terminarz.id_pupila == id_pupila)
+
+        wizyty = query.all()
+
+        if not wizyty:
+            return jsonify({"message": "Brak zrealizowanych wizyt"}), 404
+
+        result = []
+        for wizyta in wizyty:
+            weterynarz = Pracownik.query.get(
+                WizytaWeterynarz.query.filter_by(id_wizyty=wizyta.id_wizyty).first().id_pracownika
+            )
+            usluga = Uslugi.query.get(wizyta.id_uslugi)
+            pupil = Zwierzak.query.get(wizyta.id_pupila)
+            result.append({
+                "data_wizyty": wizyta.data_wizyty.strftime("%Y-%m-%d"),
+                "godzina_wizyty": wizyta.godzina_wizyty_od.strftime("%H:%M"),
+                "lekarz": f"{weterynarz.imie} {weterynarz.nazwisko}",
+                "powod_wizyty": wizyta.opis_dolegliwosci,
+                "usluga": {
+                    "nazwa": usluga.nazwa,
+                    "opis": usluga.opis
+                },
+                "pupil": {
+                    "imie": pupil.imie,
+                    "rasa": pupil.rasa.nazwa,
+                    "wiek": pupil.wiek
+                }
+            })
+
+        return jsonify(result), 200
+    except Exception as e:
+        print(f"Błąd podczas pobierania zrealizowanych wizyt: {e}")
+        return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
+
+
 # METODY PUT
 
 # Edycja danych zwierzaka

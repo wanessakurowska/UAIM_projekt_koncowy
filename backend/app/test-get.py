@@ -105,6 +105,15 @@ r = requests.get(f"{url}/api/my-pets", headers=headers, params=params)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
+#TEST POZYTYWNY DLA GET /api/completed-appointments
+print("TEST POZYTYWNY DLA GET /api/completed-appointments")
+
+# Przykład pozytywny: poprawny token 
+print("[Przypadek pozytywny] klient istnieje:")
+r = requests.get(f"{url}/api/completed-appointments", headers=headers, params=params)
+print(json.dumps(r.json(), indent=4, ensure_ascii=False))
+print(r.status_code)
+
 #TESTY DLA GET appointment-details
 print("TESTY DLA GET appointment-details")
 
