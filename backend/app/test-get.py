@@ -2,7 +2,7 @@ import requests
 import json
 
 url = "http://localhost:5000"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NTU0MjA1fQ.cQBze2XrB5ReVcgbO7N81EvqzeKrRxJeUgGrZi5x7BI"
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NjA3NTczfQ.84CAYOjEOKAoHV0pDrsoIo_HeIOyiDtk29agwSNwSn8"
 # Token uzyskany poprzez zalogowanie klientki Julia Portka
 
 headers = {
@@ -101,7 +101,7 @@ print("TESTY DLA GET appointment-details")
 
 # Przykład pozytywny: poprawne wizyta_id
 print("[Przypadek pozytywny] wizyta istnieje:")
-params = {"wizyta_id": 5}
+params = {"wizyta_id": 3}
 r = requests.get(f"{url}/appointment-details", headers=headers, params=params)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
@@ -110,8 +110,8 @@ print(r.status_code)
 print("[Przypadek negatywny] bez tokenu")
 headers.pop("Authorization")
 params = {"wizyta_id": 1}
-r = requests.post(f"{url}/appointment-details", headers=headers)
-print("Odpowiedź serwera:", r.text)
+r = requests.get(f"{url}/appointment-details", headers=headers)
+print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
 #TEST NEGATYWNY DLA GET client-appointments
@@ -119,6 +119,6 @@ print("TEST NEGATYWNY DLA GET client-appointments")
 
 # Przykład negatywny: brak tokenu
 print("[Przypadek negatywny] bez tokenu")
-r = requests.post(f"{url}/client-appointments", headers=headers)
-print("Odpowiedź serwera:", r.text)
+r = requests.get(f"{url}/client-appointments", headers=headers)
+print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)

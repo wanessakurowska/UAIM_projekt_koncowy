@@ -1,8 +1,8 @@
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
-from datetime import datetime, timedelta
-from model import Weterynarze, Pracownik, Klinika, Uslugi, Terminarz, Zwierzak, WizytaUslugi, WizytaWeterynarz, Klienci, Rasa
+from datetime import datetime, timedelta, timezone
+from model import Weterynarze, Pracownik, Klinika, Uslugi, Terminarz, Zwierzak, WizytaWeterynarz, Klienci, Rasa
 from main import app, db
 
 
@@ -110,7 +110,7 @@ def book_appointment(aktualny_klient):
     id_weterynarza = dane.get("id_weterynarza")
     data_wizyty = dane.get("data_wizyty")
     godzina_wizyty_od = dane.get("godzina_wizyty_od")
-    id_uslug = dane.get("id_uslug")
+    id_uslugi = dane.get("id_uslugi")
 
     if not all([id_pupila, id_weterynarza, data_wizyty, godzina_wizyty_od]):
         return jsonify({"error": "Brak wymaganych danych"}), 400
@@ -123,6 +123,10 @@ def book_appointment(aktualny_klient):
     if not zwierzak:
         return jsonify({"error": "Pupil nie należy do tego klienta"}), 403
 
+    usluga = Uslugi.query.get(id_uslugi)
+    if not usluga:
+        return jsonify({"error": "Usługa nie istnieje"}), 404
+
     termin_zajety = Terminarz.query.join(WizytaWeterynarz).filter(
         Terminarz.data_wizyty == datetime.strptime(data_wizyty, "%Y-%m-%d").date(),
         Terminarz.godzina_wizyty_od == datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
@@ -134,19 +138,11 @@ def book_appointment(aktualny_klient):
     nowa_wizyta = Terminarz(
         id_pupila=id_pupila,
         data_wizyty=datetime.strptime(data_wizyty, "%Y-%m-%d"),
-        godzina_wizyty_od=datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M")
+        godzina_wizyty_od=datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
+        id_uslugi=id_uslugi
     )
     db.session.add(nowa_wizyta)
     db.session.commit()
-
-    # Przypisanie usług do wizyty w tabeli WizytaUslugi
-    for id_uslugi in id_uslug:
-        usluga = Uslugi.query.get(id_uslugi)
-        if not usluga:
-            return jsonify({"error": "Usługa o tym ID nie istnieje"}), 404
-
-        przypisanie_uslugi = WizytaUslugi(id_wizyty=nowa_wizyta.id_wizyty, powod_wizyty=id_uslugi)
-        db.session.add(przypisanie_uslugi)
 
     przypisanie_weterynarza = WizytaWeterynarz(
         id_wizyty=nowa_wizyta.id_wizyty,
@@ -159,7 +155,7 @@ def book_appointment(aktualny_klient):
         "message": "Wizyta została zarejestrowana",
         "id_wizyty": nowa_wizyta.id_wizyty,
         "id_weterynarza": id_weterynarza,
-        "id_uslug": id_uslug
+        "id_uslugi": id_uslugi
     }), 201
 
 
@@ -301,16 +297,11 @@ def get_appointment_details(aktualny_klient):
         }), 404
 
     # Pobierz usługi związane z wizytą
-    uslugi = WizytaUslugi.query.filter_by(id_wizyty=wizyta.id_wizyty).all()
-    usluga_szczegoly = [
-        {
-            "id_uslugi": usluga.powod_wizyty,
-            "nazwa": Uslugi.query.get(usluga.powod_wizyty).nazwa,
-            "opis": Uslugi.query.get(usluga.powod_wizyty).opis,
-            "cena": float(Uslugi.query.get(usluga.powod_wizyty).cena)
-        }
-        for usluga in uslugi
-    ]
+    usluga = Uslugi.query.get(wizyta.id_uslugi)
+    if not usluga:
+        return jsonify({
+            "error": "Nie znaleziono usługi powiązanej z wizytą."
+        }), 404
 
     # Pobierz weterynarzy przypisanych do wizyty
     weterynarze = WizytaWeterynarz.query.filter_by(id_wizyty=wizyta.id_wizyty).all()
@@ -328,7 +319,12 @@ def get_appointment_details(aktualny_klient):
         "data_wizyty": wizyta.data_wizyty.strftime('%Y-%m-%d'),
         "godzina_wizyty_od": wizyta.godzina_wizyty_od.strftime('%H:%M'),
         "imie_pupila": zwierzak.imie,
-        "uslugi": usluga_szczegoly,
+        "usluga": {
+            "id_uslugi": usluga.id_uslugi,
+            "nazwa": usluga.nazwa,
+            "opis": usluga.opis,
+            "cena": float(usluga.cena) if usluga.cena else None
+        },
         "weterynarze": weterynarz_szczegoly
     }
 
@@ -375,7 +371,6 @@ def get_pet_details(aktualny_klient, pet_id):
         "id_rasy": zwierzak.id_rasy
     }), 200
 
-
 # Endpoint do pobrania listy ras
 @app.route("/api/races", methods=["GET"])
 def get_races():
@@ -388,7 +383,6 @@ def get_races():
     except Exception as e:
         print(f"Błąd podczas pobierania ras: {e}")
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
-
 
 # METODY PUT
 

@@ -1,7 +1,7 @@
 import requests
 
 url = "http://localhost:5000"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NTU0MjA1fQ.cQBze2XrB5ReVcgbO7N81EvqzeKrRxJeUgGrZi5x7BI"
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NjA3NTczfQ.84CAYOjEOKAoHV0pDrsoIo_HeIOyiDtk29agwSNwSn8"
 # Token uzyskany poprzez zalogowanie klientki Julia Portka
 
 headers = {
@@ -36,7 +36,7 @@ data = {
     "id_weterynarza": 1,
     "data_wizyty": "2025-01-16",
     "godzina_wizyty_od": "2025-01-16T10:00",
-    "id_uslug": [1, 2]
+    "id_uslugi": 3
 }
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
 print("Status code:", r.status_code)
@@ -48,7 +48,7 @@ data = {
     "id_weterynarza": 1,
     "data_wizyty": "2025-01-18",
     "godzina_wizyty_od": "2025-01-13T10:00",
-    "id_uslug": [2]
+    "id_uslugi": 3
 }
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
 print("Status code:", r.status_code)
@@ -61,7 +61,7 @@ data = {
     "id_weterynarza": 9999,
     "data_wizyty": "2025-01-15",
     "godzina_wizyty_od": "2025-01-15T10:00",
-    "id_uslug": [2]
+    "id_uslugi": 3
 }
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
 print("Status code:", r.status_code)
@@ -74,7 +74,7 @@ data = {
     "id_weterynarza": 1,
     "data_wizyty": "2025-01-15",
     "godzina_wizyty_od": "2025-01-15T10:00",
-    "id_uslug": [2]
+    "id_uslugi": 3
 }
 r = requests.post(f"{url}/api/book-appointment", headers=headers, json=data)
 print("Status code:", r.status_code)
