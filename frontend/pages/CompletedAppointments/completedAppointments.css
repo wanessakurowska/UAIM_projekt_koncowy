@@ -2,7 +2,7 @@
   background-image: url("/public/images/łapkiVetSlay5.png"); /* Tło */
   background-size: 100% auto; /* Dopasowanie szerokości, wysokość proporcjonalna */
   background-position: center; /* Wyśrodkowanie tła */
-  min-height: 86.5vh; /* Wysokość strony */
+  min-height: 86vh; /* Wysokość strony */
   display: flex;
   align-items: center;
   justify-content: center;

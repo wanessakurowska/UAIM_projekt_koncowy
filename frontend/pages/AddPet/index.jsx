@@ -10,7 +10,7 @@ const AddPet = () => {
     opis: "",
     plec: "",
     id_rasy: "",
-    id_gatunku: "", // Dodano pole gatunek
+    id_gatunku: "",
   });
   const [gatunki, setGatunki] = useState([]); // Lista gatunków
   const [rasy, setRasy] = useState([]); // Lista ras
@@ -53,98 +53,103 @@ const AddPet = () => {
     try {
       await apiClient.post("/api/add-pet", formData);
       setSuccess(true);
-      setTimeout(() => navigate("/"), 3000);
+      setTimeout(() => navigate("/"), 3000); 
     } catch (err) {
       setError("Wystąpił błąd podczas dodawania zwierzaka.");
     }
   };
 
   return (
-    <div className="add-pet-container">
-      <h1>Dodaj Zwierzaka</h1>
-      {success && (
-        <p style={{ color: "green" }}>
-          Zwierzaka dodano pomyślnie. Przekierowanie...
-        </p>
-      )}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Imię:
-          <input
-            type="text"
-            name="imie"
-            value={formData.imie}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Wiek:
-          <input
-            type="number"
-            name="wiek"
-            value={formData.wiek}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Opis:
-          <textarea
-            name="opis"
-            value={formData.opis}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </label>
-        <label>
-          Płeć:
-          <select
-            name="plec"
-            value={formData.plec}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Wybierz</option>
-            <option value="M">Męska</option>
-            <option value="F">Żeńska</option>
-          </select>
-        </label>
-        <label>
-          Gatunek:
-          <select
-            name="id_gatunku"
-            value={formData.id_gatunku}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Wybierz gatunek</option>
-            {gatunki.map((gatunek) => (
-              <option key={gatunek.id_gatunku} value={gatunek.id_gatunku}>
-                {gatunek.nazwa}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Rasa:
-          <select
-            name="id_rasy"
-            value={formData.id_rasy}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Wybierz rasę</option>
-            {filteredRasy.map((rasa) => (
-              <option key={rasa.id_rasy} value={rasa.id_rasy}>
-                {rasa.rasa}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button type="submit">Dodaj Zwierzaka</button>
-      </form>
+    <div className="add-pet-page">
+      <div className="add-pet-container">
+        <h1>Dodaj Zwierzaka</h1>
+        {success && (
+          <p style={{ color: "green" }}>
+            Zwierzaka dodano pomyślnie. Przekierowanie...
+          </p>
+        )}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <label>
+            Imię:
+            <input
+              type="text"
+              name="imie"
+              value={formData.imie}
+              placeholder="Wpisz imię zwierzaka"
+              onChange={handleChange}
+              required
+            />
+          </label>
+          <label>
+            Wiek:
+            <input
+              type="number"
+              name="wiek"
+              value={formData.wiek}
+              placeholder="Wpisz wiek zwierzaka"
+              onChange={handleChange}
+              required
+            />
+          </label>
+          <label>
+            Opis:
+            <textarea
+              name="opis"
+              value={formData.opis}
+              placeholder="Wpisz opis zwierzaka"
+              onChange={handleChange}
+              required
+            ></textarea>
+          </label>
+          <label>
+            Płeć:
+            <select
+              name="plec"
+              value={formData.plec}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Wybierz płeć</option>
+              <option value="M">Męska</option>
+              <option value="F">Żeńska</option>
+            </select>
+          </label>
+          <label>
+            Gatunek:
+            <select
+              name="id_gatunku"
+              value={formData.id_gatunku}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Wybierz gatunek</option>
+              {gatunki.map((gatunek) => (
+                <option key={gatunek.id_gatunku} value={gatunek.id_gatunku}>
+                  {gatunek.nazwa}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Rasa:
+            <select
+              name="id_rasy"
+              value={formData.id_rasy}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Wybierz rasę</option>
+              {filteredRasy.map((rasa) => (
+                <option key={rasa.id_rasy} value={rasa.id_rasy}>
+                  {rasa.rasa}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button type="submit">Dodaj zwierzaka</button>
+        </form>
+      </div>
     </div>
   );
 };

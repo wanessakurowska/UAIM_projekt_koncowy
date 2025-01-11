@@ -23,7 +23,7 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <div style={{ minHeight: "calc(100vh - 110px)" }}>
+      <div style={{ minHeight: "calc(100vh - 100px)" }}>
         {/* Główna zawartość strony */}
         <Routes>
           <Route path="/" element={<Home />} />
@@ -74,7 +74,7 @@ function App() {
           <Route path="/register" element={<Register />} />
         </Routes>
       </div>
-      <Footer /> {/* Dodanie stopki */}
+      <Footer />
     </Router>
   );
 }

@@ -1,29 +1,28 @@
 .footer {
-    background-color: #f9f9f9; /* Tło footera */
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600; /* Semi-Bold */
-    padding: 10px 20px;
-    display: flex;
-    justify-content: flex-end; /* Wyrównanie do prawej strony */
-    align-items: center;
-    border-top: 1px solid #ddd; /* Linia oddzielająca */
-  }
-  
-  .footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Odstęp między ikoną a tekstem */
-    font-size: 18px;
-    color: #333;
-  }
-  
-  .footer-logo a {
-    text-decoration: none;
-    color: #000000; /* Kolor linku */
-    font-weight: bold;
-  }
-  
-  .footer-logo i {
-    color: #000000; /* Kolor ikony */
-  }
-  
+  background-color: #f9f9f9; /* Tło footera */
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600; /* Semi-Bold */
+  padding: 5px 20px;
+  display: flex;
+  justify-content: flex-end; /* Wyrównanie do prawej strony */
+  align-items: center;
+  border-top: 1px solid #ddd; /* Linia oddzielająca */
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Odstęp między ikoną a tekstem */
+  font-size: 18px;
+  color: #333;
+}
+
+.footer-logo a {
+  text-decoration: none;
+  color: #000000; /* Kolor linku */
+  font-weight: bold;
+}
+
+.footer-logo i {
+  color: #000000; /* Kolor ikony */
+}

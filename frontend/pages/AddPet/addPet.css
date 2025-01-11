@@ -2,7 +2,7 @@
   background-image: url("/public/images/łapkiVetSlay5.png"); /* Tło */
   background-size: cover; /* Dopasuj tło do strony */
   background-position: center; /* Wyśrodkuj tło */
-  min-height: 86.5vh; /* Wysokość strony dopasowana do okna przeglądarki */
+  min-height: 86vh; /* Wysokość strony dopasowana do okna przeglądarki */
   display: flex;
   align-items: center; /* Wyśrodkowanie kontenera w pionie */
   justify-content: center; /* Wyśrodkowanie kontenera w poziomie */
@@ -10,7 +10,7 @@
 
 .add-pet-container {
   font-family: 'Rajdhani', sans-serif; /* Profesjonalna czcionka */
-  padding: 10px;
+  padding: 20px;
   background-color: rgba(255, 255, 255, 0.9); /* Półprzezroczyste białe tło */
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
@@ -58,16 +58,16 @@
 }
 
 .add-pet-container button {
-  background-color: #0166d2; /* Kolor przycisku */
+  padding: 10px 20px;
+  background-color: #ADCBD3; /* Kolor przycisku */
   color: white;
-  font-weight: bold;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .add-pet-container button:hover {
-  background-color: #0056b3; /* Ciemniejszy kolor przycisku po najechaniu */
+  background-color: #98b3bb; /* Ciemniejszy kolor przycisku po najechaniu */
 }
 
 .add-pet-container .success,

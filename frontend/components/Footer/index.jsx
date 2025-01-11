@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-logo">
-        <i className="fas fa-paw fa-2x"></i> {/* To samo logo co w navbarze */}
+        <i className="fas fa-paw fa-2x"></i>
         <Link to="/">UaimVet</Link>
       </div>
     </footer>

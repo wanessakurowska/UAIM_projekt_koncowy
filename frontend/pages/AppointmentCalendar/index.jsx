@@ -100,53 +100,55 @@ const AppointmentCalendar = () => {
   };
 
   return (
-    <div className="calendar-container">
-      <h1>Kalendarz wizyt</h1>
-      {error && <p className="error">{error}</p>}
-      <div className="form-inline">
-        <select
-          value={selectedVeterinarian}
-          onChange={(e) => setSelectedVeterinarian(e.target.value)}
-        >
-          <option value="">-- Wybierz weterynarza --</option>
-          {veterinarians.map((vet) => (
-            <option key={vet.id} value={vet.id}>
-              {vet.imię} {vet.nazwisko}
-            </option>
+    <div className="calendar-page">
+      <div className="calendar-container">
+        <h1>Kalendarz wizyt</h1>
+        {error && <p className="error">{error}</p>}
+        <div className="form-inline">
+          <select
+            value={selectedVeterinarian}
+            onChange={(e) => setSelectedVeterinarian(e.target.value)}
+          >
+            <option value="">-- Wybierz weterynarza --</option>
+            {veterinarians.map((vet) => (
+              <option key={vet.id} value={vet.id}>
+                {vet.imię} {vet.nazwisko}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="calendar-navigation">
+          <button onClick={prevDates} className="navigation-button">
+            ◀
+          </button>
+          <button onClick={nextDates} className="navigation-button">
+            ▶
+          </button>
+        </div>
+        <div className="calendar">
+          {currentDates.map((date) => (
+            <div key={date.toISOString()} className="day-column">
+              <h3>
+                {date.toLocaleDateString("pl-PL", {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                })}
+              </h3>
+              {availableSlots
+                .filter((slot) => slot.slot.startsWith(date.toISOString().split("T")[0]))
+                .map((slot) => (
+                  <div
+                    key={slot.slot}
+                    className={`time-slot ${slot.available ? "available" : "unavailable"}`}
+                    onClick={() => slot.available && handleSlotClick(slot.slot)}
+                  >
+                    {slot.slot.split("T")[1]}
+                  </div>
+                ))}
+            </div>
           ))}
-        </select>
-      </div>
-      <div className="calendar-navigation">
-        <button onClick={prevDates} className="navigation-button">
-          ◀
-        </button>
-        <button onClick={nextDates} className="navigation-button">
-          ▶
-        </button>
-      </div>
-      <div className="calendar">
-        {currentDates.map((date) => (
-          <div key={date.toISOString()} className="day-column">
-            <h3>
-              {date.toLocaleDateString("pl-PL", {
-                weekday: "short",
-                day: "numeric",
-                month: "short",
-              })}
-            </h3>
-            {availableSlots
-              .filter((slot) => slot.slot.startsWith(date.toISOString().split("T")[0]))
-              .map((slot) => (
-                <div
-                  key={slot.slot}
-                  className={`time-slot ${slot.available ? "available" : "unavailable"}`}
-                  onClick={() => slot.available && handleSlotClick(slot.slot)}
-                >
-                  {slot.slot.split("T")[1]}
-                </div>
-              ))}
-          </div>
-        ))}
+        </div>
       </div>
     </div>
   );

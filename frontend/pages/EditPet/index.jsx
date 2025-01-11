@@ -48,72 +48,74 @@ const EditPet = () => {
   };
 
   return (
-    <div className="edit-pet-container">
-      <h1>Edytuj Zwierzaka</h1>
-      {success && <p style={{ color: "green" }}>Zwierzak został zaktualizowany.</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Imię:
-          <input
-            type="text"
-            name="imie"
-            value={formData.imie}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Wiek:
-          <input
-            type="number"
-            name="wiek"
-            value={formData.wiek}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Opis:
-          <textarea
-            name="opis"
-            value={formData.opis}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </label>
-        <label>
-          Płeć:
-          <select
-            name="plec"
-            value={formData.plec}
-            onChange={handleChange}
-            required
-          >
-            <option value="M">Męska</option>
-            <option value="F">Żeńska</option>
-          </select>
-        </label>
-        <label>
-          Gatunek:
-          <input
-            type="text"
-            name="id_gatunku"
-            value={formData.gatunek}
-            readOnly
-          />
-        </label>
-        <label>
-          Rasa:
-          <input
-            type="text"
-            name="id_rasy"
-            value={formData.rasa}
-            readOnly
-          />
-        </label>
-        <button type="submit">Zapisz zmiany</button>
-      </form>
+    <div className="edit-pet-page">
+      <div className="edit-pet-container">
+        <h1>Edytuj Zwierzaka</h1>
+        {success && <p style={{ color: "green" }}>Zwierzak został zaktualizowany.</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <label>
+            Imię:
+            <input
+              type="text"
+              name="imie"
+              value={formData.imie}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          <label>
+            Wiek:
+            <input
+              type="number"
+              name="wiek"
+              value={formData.wiek}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          <label>
+            Opis:
+            <textarea
+              name="opis"
+              value={formData.opis}
+              onChange={handleChange}
+              required
+            ></textarea>
+          </label>
+          <label>
+            Płeć:
+            <select
+              name="plec"
+              value={formData.plec}
+              onChange={handleChange}
+              required
+            >
+              <option value="M">Męska</option>
+              <option value="F">Żeńska</option>
+            </select>
+          </label>
+          <label>
+            Gatunek:
+            <input
+              type="text"
+              name="id_gatunku"
+              value={formData.gatunek}
+              readOnly
+            />
+          </label>
+          <label>
+            Rasa:
+            <input
+              type="text"
+              name="id_rasy"
+              value={formData.rasa}
+              readOnly
+            />
+          </label>
+          <button type="submit">Zapisz zmiany</button>
+        </form>
+      </div>
     </div>
   );
 };

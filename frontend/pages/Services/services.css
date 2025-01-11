@@ -1,24 +1,46 @@
 .services-page {
-  background-image: url("/public/images/łapkiVetSlay5.png"); /* Ustaw tło */
-  background-size: cover; /* Dopasuj tło do całej strony */
-  background-position: center; /* Wyśrodkuj tło */
-  min-height: 86.5vh; /* Wysokość strony dopasowana do okna przeglądarki */
+  background-image: url("/public/images/łapkiVetSlay5.png"); /* Tło */
+  background-size: cover; /* Dopasowanie tła */
+  background-position: center; /* Wyśrodkowanie tła */
+  min-height: 86vh; /* Wysokość strony */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .services-container {
-  font-family: 'Rajdhani', sans-serif;
-  padding: 10px;
-  background-color: rgb(255, 255, 255); /* Półprzezroczyste białe tło */
+  font-family: 'Rajdhani', sans-serif; /* Profesjonalna czcionka */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Półprzezroczyste białe tło */
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
   max-width: 1200px;
   margin: 0 auto; /* Wyśrodkowanie kontenera */
+}
+
+.services-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000000; /* Kolor nagłówka */
+  text-transform: uppercase;
+}
+
+.services-table-container {
+  background-color: #ffffff; /* Białe tło dla tabeli */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lekki cień */
 }
 
 .services-table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
+  background-color: #ffffff; /* Tło tabeli */
+  border-radius: 5px; /* Zaokrąglenie rogów */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lekki cień tabeli */
 }
 
 .services-table th,
@@ -29,16 +51,16 @@
 }
 
 .services-table th {
-  background-color: #ADCBD3;
+  background-color: #ADCBD3; /* Kolor nagłówków tabeli */
   color: white;
   text-transform: uppercase;
 }
 
 .services-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; /* Delikatny pasek wiersza */
 }
 
 .services-table tr:hover {
-  background-color: #e9ecef;
+  background-color: #e9ecef; /* Jasne podświetlenie wiersza */
   transition: background-color 0.3s ease;
 }

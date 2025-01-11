@@ -31,55 +31,62 @@ const MyPets = () => {
   };
 
   return (
-    <div className="my-pets-container">
-      <h1>Moje Zwierzaki</h1>
-      {error && <p className="error">{error}</p>}
-      <table className="pets-table">
-        <thead>
-          <tr>
-            <th>Imię</th>
-            <th>Wiek</th>
-            <th>Płeć</th>
-            <th>Rasa</th>
-            <th>Gatunek</th>
-            <th>Akcje</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pets.map((pet) => (
-            <tr key={pet.id_pupila}>
-              <td>{pet.imie}</td>
-              <td>{pet.wiek}</td>
-              <td>{pet.plec === "M" ? "Samiec" : "Samica"}</td>
-              <td>{pet.rasa}</td>
-              <td>{pet.gatunek}</td>
-              <td>
-                <button onClick={() => handleSelectPet(pet.id_pupila)}>
-                  Pokaż szczegóły
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {selectedPet && (
-        <div className="pet-details">
-          <h2>Szczegóły zwierzaka</h2>
-          <p>Imię: {selectedPet.imie}</p>
-          <p>Wiek: {selectedPet.wiek}</p>
-          <p>Opis: {selectedPet.opis}</p>
-          <p>Płeć: {selectedPet.plec === "M" ? "Samiec" : "Samica"}</p>
-          <p>Rasa: {selectedPet.rasa}</p>
-          <p>Gatunek: {selectedPet.gatunek}</p>
-          <button
-            onClick={() =>
-              (window.location.href = `/edit-pet/${selectedPet.id_pupila}`)
-            }
-          >
-            Edytuj
-          </button>
+    <div className="my-pets-page">
+      <div className="my-pets-container">
+        <h1>Moje Zwierzaki</h1>
+        {error && <p className="error">{error}</p>}
+        <div className="pets-table-container">
+          <table className="pets-table">
+            <thead>
+              <tr>
+                <th>Imię</th>
+                <th>Wiek</th>
+                <th>Płeć</th>
+                <th>Rasa</th>
+                <th>Gatunek</th>
+                <th>Akcje</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pets.map((pet) => (
+                <tr key={pet.id_pupila}>
+                  <td>{pet.imie}</td>
+                  <td>{pet.wiek} lat</td>
+                  <td>{pet.plec === "M" ? "Samiec" : "Samica"}</td>
+                  <td>{pet.rasa}</td>
+                  <td>{pet.gatunek}</td>
+                  <td>
+                    <button 
+                      className="pets-button"
+                      onClick={() => handleSelectPet(pet.id_pupila)}
+                    >
+                      Pokaż szczegóły
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      )}
+        {selectedPet && (
+          <div className="pet-details">
+            <h2>SZCZEGÓŁY ZWIERZAKA</h2>
+            <p>Imię: {selectedPet.imie}</p>
+            <p>Wiek: {selectedPet.wiek} lat</p>
+            <p>Opis: {selectedPet.opis}</p>
+            <p>Płeć: {selectedPet.plec === "M" ? "Samiec" : "Samica"}</p>
+            <p>Rasa: {selectedPet.rasa}</p>
+            <p>Gatunek: {selectedPet.gatunek}</p>
+              <button
+                onClick={() =>
+                  (window.location.href = `/edit-pet/${selectedPet.id_pupila}`)
+                }
+              >
+                Edytuj
+              </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

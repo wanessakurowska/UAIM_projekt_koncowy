@@ -1,37 +1,81 @@
-.edit-pet-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
+.edit-pet-page {
+    background-image: url("/public/images/łapkiVetSlay5.png"); /* Tło strony */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    min-height: 86vh; /* Wysokość strony */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
+  
+.edit-pet-container {
+    font-family: 'Rajdhani', sans-serif; /* Profesjonalna czcionka */
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Półprzezroczyste białe tło */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
+    max-width: 500px;
+    width: 100%; /* Dopasowanie szerokości */
+    margin: 10px 10px; /* Wyśrodkowanie */
+}
+  
+.edit-pet-container h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #000000; /* Kolor tekstu */
+    text-transform: uppercase;
+}
+  
 .edit-pet-container form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 10px; /* Odstęp między polami */
 }
-
+  
 .edit-pet-container label {
-    display: flex;
-    flex-direction: column;
+    font-size: 1rem;
     font-weight: bold;
+    color: #333;
+    margin-top: -1px;
 }
-
+  
 .edit-pet-container input,
 .edit-pet-container textarea,
 .edit-pet-container select {
-    padding: 5px;
-    font-size: 16px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: -1px;
 }
-
+  
+.edit-pet-container textarea {
+    resize: none;
+    height: 60px; /* Wysokość pola tekstowego */
+}
+  
 .edit-pet-container button {
     padding: 10px;
-    background-color: #007bff;
+    font-size: 1rem;
+    background-color: #ADCBD3; /* Kolor przycisku */
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
-
+  
 .edit-pet-container button:hover {
-    background-color: #0056b3;
+    background-color: #98b3bb; /* Ciemniejszy kolor przycisku po najechaniu */
 }
+  
+.edit-pet-container p {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+}
+  

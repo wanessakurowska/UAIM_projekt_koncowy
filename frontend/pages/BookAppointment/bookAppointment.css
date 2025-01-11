@@ -1,61 +1,92 @@
+.book-appointment-page {
+  background-image: url("/public/images/łapkiVetSlay5.png"); /* Tło */
+  background-size: 100% auto; /* Dopasowanie szerokości */
+  background-position: center;
+  background-attachment: fixed; /* Stałe tło */
+  min-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .book-appointment-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .book-appointment-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .book-appointment-container label {
-    display: flex;
-    flex-direction: column;
-    font-weight: bold;
-  }
-  
-  .book-appointment-container input,
-  .book-appointment-container textarea,
-  .book-appointment-container select {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .book-appointment-container textarea {
-    resize: none;
-    height: 100px;
-  }
-  
-  .book-appointment-container button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .book-appointment-container button:hover {
-    background-color: #0056b3;
-  }
-  
-  .book-appointment-container .success {
-    color: green;
-    font-weight: bold;
-    text-align: center;
-    margin: 10px 0;
-  }
-  
-  .book-appointment-container .error {
-    color: red;
-    font-weight: bold;
-    text-align: center;
-    margin: 10px 0;
-  }
-  
+  font-family: 'Rajdhani', sans-serif; /* Profesjonalna czcionka */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Półprzezroczyste białe tło */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
+  max-width: 500px; /* Ograniczenie szerokości */
+  width: 100%; /* Pełna szerokość dla mniejszych ekranów */
+  margin: 10px 10px;
+}
+
+.book-appointment-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000000; /* Kolor nagłówka */
+  text-transform: uppercase;
+  margin-top: -1px;
+}
+
+.book-appointment-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Odstęp między elementami */
+}
+
+.book-appointment-container label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+  margin-top: -10px;
+}
+
+.book-appointment-container input,
+.book-appointment-container textarea,
+.book-appointment-container select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #ffffff; /* Białe tło */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Lekki cień */
+  margin-top: -1px;
+}
+
+.book-appointment-container textarea {
+  resize: none;
+  height: 50px; /* Ustawiona wysokość */
+}
+
+.book-appointment-container button {
+  padding: 10px 20px;
+  background-color: #ADCBD3; /* Dopasowany kolor */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Lekki cień */
+}
+
+.book-appointment-container button:hover {
+  background-color: #98b3bb; /* Ciemniejszy odcień */
+}
+
+.book-appointment-container .success {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.book-appointment-container .error {
+  color: red;
+  font-weight: bold;
+  margin-top: -20px;
+  text-align: center;
+}
