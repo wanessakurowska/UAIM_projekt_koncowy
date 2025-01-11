@@ -1,35 +1,44 @@
+.services-page {
+  background-image: url("/public/images/łapkiVetSlay5.png"); /* Ustaw tło */
+  background-size: cover; /* Dopasuj tło do całej strony */
+  background-position: center; /* Wyśrodkuj tło */
+  min-height: 86.5vh; /* Wysokość strony dopasowana do okna przeglądarki */
+}
+
 .services-container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .services-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-  }
-  
-  .services-table th,
-  .services-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .services-table th {
-    background-color: #f4f4f4;
-  }
-  
-  .services-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .services-table tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .error {
-    color: red;
-    font-weight: bold;
-  }
-  
+  font-family: 'Rajdhani', sans-serif;
+  padding: 10px;
+  background-color: rgb(255, 255, 255); /* Półprzezroczyste białe tło */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 1200px;
+  margin: 0 auto; /* Wyśrodkowanie kontenera */
+}
+
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.services-table th,
+.services-table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.services-table th {
+  background-color: #ADCBD3;
+  color: white;
+  text-transform: uppercase;
+}
+
+.services-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.services-table tr:hover {
+  background-color: #e9ecef;
+  transition: background-color 0.3s ease;
+}

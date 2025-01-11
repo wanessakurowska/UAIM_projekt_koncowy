@@ -1,34 +1,63 @@
+.veterinarians-page {
+  background-image: url("/public/images/łapkiVetSlay5.png"); /* Tło */
+  background-size: 100% auto; /* Dopasowanie szerokości, wysokość proporcjonalna */
+  background-position: center; /* Wyśrodkowanie tła */
+  min-height: 86.5vh; /* Wysokość strony */
+}
+
 .veterinarians-container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .veterinarians-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-  }
-  
-  .veterinarians-table th,
-  .veterinarians-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .veterinarians-table th {
-    background-color: #f4f4f4;
-  }
-  
-  .veterinarians-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .veterinarians-table tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .error {
-    color: red;
-    font-weight: bold;
-  }
+  font-family: 'Rajdhani', sans-serif; /* Profesjonalna czcionka */
+  padding: 10px;
+  background-color: rgb(255, 255, 255); /* Półprzezroczyste białe tło */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
+  max-width: 1200px;
+  margin: 0 auto; /* Wyśrodkowanie kontenera */
+}
+
+.veterinarians-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000000; /* Kolor akcentu */
+  text-transform: uppercase;
+}
+
+.veterinarians-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lekki cień */
+  background-color: #ffffff; /* Tło tabeli */
+}
+
+.veterinarians-table th,
+.veterinarians-table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.veterinarians-table th {
+  background-color: #ADCBD3; /* Gradient nagłówków */
+  color: white;
+  text-transform: uppercase;
+}
+
+.veterinarians-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Delikatny pasek wiersza */
+}
+
+.veterinarians-table tr:hover {
+  background-color: #e9ecef; /* Jasne podświetlenie wiersza */
+  transition: background-color 0.3s ease;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}

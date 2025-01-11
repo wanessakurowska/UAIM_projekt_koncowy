@@ -32,32 +32,34 @@ const Services = () => {
   }
 
   return (
-    <div className="services-container">
-      <h1>Katalog usług</h1>
-      {services.length === 0 ? (
-        <p>Brak dostępnych usług.</p>
-      ) : (
-        <table className="services-table">
-          <thead>
-            <tr>
-              <th>Nazwa</th>
-              <th>Opis</th>
-              <th>Cena</th>
-              <th>Dostępność</th>
-            </tr>
-          </thead>
-          <tbody>
-            {services.map((service) => (
-              <tr key={service.id}>
-                <td>{service.nazwa}</td>
-                <td>{service.opis || "Brak opisu"}</td>
-                <td>{service.cena ? `${service.cena} zł` : "Cena nieokreślona"}</td>
-                <td>{service.dostepnosc || "Nieznana"}</td>
+    <div className="services-page">
+      <div className="services-container">
+        <h1>KATALOG USŁUG</h1>
+        {services.length === 0 ? (
+          <p>Brak dostępnych usług.</p>
+        ) : (
+          <table className="services-table">
+            <thead>
+              <tr>
+                <th>Nazwa usługi</th>
+                <th>Opis</th>
+                <th>Cena</th>
+                <th>Dostępność</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {services.map((service) => (
+                <tr key={service.id}>
+                  <td>{service.nazwa}</td>
+                  <td>{service.opis || "Brak opisu"}</td>
+                  <td>{service.cena ? `${service.cena} zł` : "Cena nieokreślona"}</td>
+                  <td>{service.dostepnosc || "Nieznana"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };

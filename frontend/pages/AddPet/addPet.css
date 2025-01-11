@@ -1,34 +1,87 @@
+.add-pet-page {
+  background-image: url("/public/images/łapkiVetSlay5.png"); /* Tło */
+  background-size: cover; /* Dopasuj tło do strony */
+  background-position: center; /* Wyśrodkuj tło */
+  min-height: 86.5vh; /* Wysokość strony dopasowana do okna przeglądarki */
+  display: flex;
+  align-items: center; /* Wyśrodkowanie kontenera w pionie */
+  justify-content: center; /* Wyśrodkowanie kontenera w poziomie */
+}
+
 .add-pet-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .add-pet-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .add-pet-container label {
-    display: flex;
-    flex-direction: column;
-    font-weight: bold;
-  }
-  
-  .add-pet-container input,
-  .add-pet-container textarea,
-  .add-pet-container select {
-    padding: 5px;
-    font-size: 16px;
-  }
-  
-  .add-pet-container button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
+  font-family: 'Rajdhani', sans-serif; /* Profesjonalna czcionka */
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9); /* Półprzezroczyste białe tło */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
+  width: 100%;
+  max-width: 500px; /* Maksymalna szerokość formularza */
+}
+
+.add-pet-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000000; /* Kolor akcentu */
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.add-pet-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 11px; /* Odstęp między elementami formularza */
+}
+
+.add-pet-container label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333; /* Ciemny kolor tekstu */
+}
+
+.add-pet-container input,
+.add-pet-container select,
+.add-pet-container textarea,
+.add-pet-container button {
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%; /* Dopasowanie do szerokości kontenera */
+  box-sizing: border-box;
+}
+
+.add-pet-container textarea {
+  resize: none;
+  height: 60px; /* Minimalna wysokość pola tekstowego */
+  overflow-y: auto;
+}
+
+.add-pet-container button {
+  background-color: #0166d2; /* Kolor przycisku */
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-pet-container button:hover {
+  background-color: #0056b3; /* Ciemniejszy kolor przycisku po najechaniu */
+}
+
+.add-pet-container .success,
+.add-pet-container .error {
+  font-weight: bold;
+  text-align: center;
+  margin: 1px 0;
+  font-size: 1rem;
+}
+
+.add-pet-container .success {
+  color: green;
+}
+
+.add-pet-container .error {
+  color: red;
+}

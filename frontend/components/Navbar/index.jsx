@@ -30,56 +30,68 @@ const Navbar = () => {
     window.location.href = "/login";
   };
 
-  const handleProtectedLink = () => {
+  const handleProtectedRoute = (e, route) => {
     if (!isLoggedIn) {
+      e.preventDefault();
       navigate("/login");
     } else {
-      navigate("/appointment-calendar");
+      navigate(route);
     }
   };
 
   return (
     <nav className="navbar">
-      <ul className="navbar-list left-links">
+      {/* Sekcja linków wyśrodkowanych */}
+      <ul className="navbar-list">
         <li>
-          <Link to="/services">Katalog usług</Link>
+          <Link to="/">
+            <i className="fas fa-home"></i>
+          </Link>
         </li>
         <li>
-          <Link to="/veterinarians">Lekarze</Link>
+          <Link to="/services">USŁUGI</Link>
         </li>
         <li>
-          <button onClick={handleProtectedLink} className="link-button">
-            Rezerwacja wizyty
-          </button>
+          <Link to="/veterinarians">NASZ ZESPÓŁ</Link>
+        </li>
+        <li>
+          <Link
+            to="/appointment-calendar"
+            onClick={(e) => handleProtectedRoute(e, "/appointment-calendar")}
+          >
+            REZERWACJA WIZYTY
+          </Link>
         </li>
         {isLoggedIn && (
           <>
             <li>
-              <Link to="/add-pet">Dodaj Zwierzaka</Link>
+              <Link to="/add-pet">DODAJ ZWIERZAKA</Link>
             </li>
             <li>
-              <Link to="/my-pets">Moje Zwierzaki</Link>
+              <Link to="/my-pets">MOJE ZWIERZAKI</Link>
             </li>
             <li>
-              <Link to="/completed-appointments">Wizyty</Link>
+              <Link to="/completed-appointments">WIZYTY</Link>
             </li>
           </>
         )}
       </ul>
-      <ul className="navbar-list right-links">
+
+      {/* Sekcja linków autoryzacji po prawej */}
+      <ul className="navbar-auth">
         {isLoggedIn ? (
           <li>
             <span className="logout-link" onClick={handleLogout}>
-              Wyloguj
+              WYLOGUJ
             </span>
           </li>
         ) : (
           <>
             <li>
-              <Link to="/login">Zaloguj</Link>
+              <Link to="/login">ZALOGUJ</Link>
             </li>
             <li>
-              <Link to="/register">Zarejestruj</Link>
+              <Link to="/register">ZAREJESTRUJ</Link>
             </li>
           </>
         )}

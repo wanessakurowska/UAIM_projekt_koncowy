@@ -334,7 +334,7 @@ def get_appointment_details(aktualny_klient):
 
     return jsonify(wynik), 200
 
-
+# Sprawdzanie dostępności weterynarza w podanym terminie
 @app.route("/api/vet-availability", methods=["GET"])
 def check_vet_availability():
     data_wizyty = request.args.get("data_wizyty")
@@ -467,7 +467,6 @@ def get_completed_appointments(aktualny_klient):
         print(f"Błąd podczas pobierania zrealizowanych wizyt: {e}")
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
 
-
 # Endpoint do pobierania wolnych terminów
 @app.route("/api/available-slots", methods=["GET"])
 def get_available_slots():
@@ -518,8 +517,6 @@ def get_available_slots():
         print(f"Błąd podczas pobierania wolnych terminów: {e}")
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
 
-
-
 # METODY PUT
 
 # Edycja danych zwierzaka
@@ -536,6 +533,7 @@ def edit_pet_details(aktualny_klient, pet_id):
     zwierzak.wiek = dane.get("wiek", zwierzak.wiek)
     zwierzak.opis = dane.get("opis", zwierzak.opis)
     zwierzak.plec = dane.get("plec", zwierzak.plec)
+    zwierzak.id_rasy = dane.get("id_rasy", zwierzak.id_rasy)
 
     db.session.commit()
     return jsonify({"message": "Zwierzak został zaktualizowany"}), 200

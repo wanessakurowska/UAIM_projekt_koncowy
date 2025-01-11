@@ -1,0 +1,49 @@
+.home-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 86vh; /* Pełna wysokość widoku */
+    background-image: url('/public/images/tlo.png'); /* Ścieżka do obrazu tła */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+  }
+  
+  .hero-section {
+    background-color: rgba(0, 0, 0, 0.5); /* Przezroczysty czarny overlay */
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .hero-section h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+  
+  .hero-section h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .hero-section p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .appointment-button {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #28a745; /* Zielony kolor */
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .appointment-button:hover {
+    background-color: #218838; /* Ciemniejszy zielony na hover */
+  }
+  

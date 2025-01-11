@@ -32,36 +32,40 @@ const Veterinarians = () => {
   }
 
   return (
-    <div className="veterinarians-container">
-      <h1>Lista lekarzy</h1>
-      {veterinarians.length === 0 ? (
-        <p>Brak dostępnych lekarzy.</p>
-      ) : (
-        <table className="veterinarians-table">
-          <thead>
-            <tr>
-              <th>Imię</th>
-              <th>Nazwisko</th>
-              <th>Doświadczenie</th>
-              <th>Kwalifikacje</th>
-              <th>Status</th>
-              <th>Klinika</th>
-            </tr>
-          </thead>
-          <tbody>
-            {veterinarians.map((vet) => (
-              <tr key={vet.id}>
-                <td>{vet.imię}</td>
-                <td>{vet.nazwisko}</td>
-                <td>{vet.doświadczenie} lat</td>
-                <td>{vet.kwalifikacje}</td>
-                <td>{vet.status}</td>
-                <td>{vet.klinika || "Brak danych"}</td>
+    <div className="veterinarians-page">
+      <div className="veterinarians-container">
+        <h1>Lista lekarzy</h1>
+        {veterinarians.length === 0 ? (
+          <p>Brak dostępnych lekarzy.</p>
+        ) : (
+          <table className="veterinarians-table">
+            <thead>
+              <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Doświadczenie</th>
+                <th>Kwalifikacje</th>
+                <th>Ocena</th>
+                <th>Status</th>
+                <th>Klinika</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {veterinarians.map((vet) => (
+                <tr key={vet.id}>
+                  <td>{vet.imię}</td>
+                  <td>{vet.nazwisko}</td>
+                  <td>{vet.doświadczenie}</td>
+                  <td>{vet.kwalifikacje}</td>
+                  <td>{vet.ocena}</td>
+                  <td>{vet.status}</td>
+                  <td>{vet.klinika || "Brak danych"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };
