@@ -1,11 +1,9 @@
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
-from datetime import datetime, timedelta, timezone
-from model import Weterynarze, Pracownik, Klinika, Uslugi, Terminarz, Zwierzak, WizytaWeterynarz, Klienci, Rasa
+from datetime import datetime, timedelta
+from model import Weterynarze, Pracownik, Klinika, Uslugi, Terminarz, Zwierzak, WizytaWeterynarz, Klienci, Rasa, Gatunki
 from main import app, db
-
-
 
 SECRET_KEY = "21xuaim2024Zx37"
 
@@ -101,7 +99,6 @@ def require_authorization(f):
     return wrapper
 
 
-# Umów wizytę
 @app.route("/api/book-appointment", methods=["POST"])
 @require_authorization
 def book_appointment(aktualny_klient):
@@ -127,10 +124,22 @@ def book_appointment(aktualny_klient):
     usluga = Uslugi.query.get(id_uslugi)
     if not usluga:
         return jsonify({"error": "Usługa nie istnieje"}), 404
+    
+    # Sprawdzanie, czy termin jest w przeszłości
+    teraz = datetime.now()
+    termin = datetime.strptime(f"{data_wizyty} {godzina_wizyty_od.split('T')[1]}", "%Y-%m-%d %H:%M")
+    if termin <= teraz:
+        return jsonify({"error": "Nie można umawiać wizyt na daty w przeszłości"}), 400
+    
+    # Sprawdzanie godzin pracy kliniki
+    opening_hour = datetime.strptime("08:00", "%H:%M").time()
+    closing_hour = datetime.strptime("18:00", "%H:%M").time()
+    if not (opening_hour <= termin.time() <= closing_hour):
+        return jsonify({"error": "Wizyty można umawiać jedynie w godzinach pracy kliniki (08:00-18:00)"}), 400
 
     termin_zajety = Terminarz.query.join(WizytaWeterynarz).filter(
         Terminarz.data_wizyty == datetime.strptime(data_wizyty, "%Y-%m-%d").date(),
-        Terminarz.godzina_wizyty_od == datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
+        Terminarz.godzina_wizyty_od == termin,
         WizytaWeterynarz.id_pracownika == id_weterynarza
     ).first()
     if termin_zajety:
@@ -139,7 +148,7 @@ def book_appointment(aktualny_klient):
     nowa_wizyta = Terminarz(
         id_pupila=id_pupila,
         data_wizyty=datetime.strptime(data_wizyty, "%Y-%m-%d"),
-        godzina_wizyty_od=datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
+        godzina_wizyty_od=termin,
         id_uslugi=id_uslugi,
         opis_dolegliwosci=opis_dolegliwosci
     )
@@ -176,6 +185,10 @@ def add_pet(aktualny_klient):
 
     if not all([imie, wiek, id_rasy]):
         return jsonify({"error": "Brak wymaganych danych"}), 400
+
+    rasa = Rasa.query.get(id_rasy)
+    if not rasa:
+        return jsonify({"error": "Nie znaleziono wybranej rasy"}), 404
 
     nowy_zwierzak = Zwierzak(
         imie=imie,
@@ -334,7 +347,7 @@ def get_appointment_details(aktualny_klient):
 
     return jsonify(wynik), 200
 
-# Sprawdzanie dostępności weterynarza w podanym terminie
+
 @app.route("/api/vet-availability", methods=["GET"])
 def check_vet_availability():
     data_wizyty = request.args.get("data_wizyty")
@@ -366,27 +379,38 @@ def get_pet_details(aktualny_klient, pet_id):
     if not zwierzak:
         return jsonify({"error": "Zwierzak nie został znaleziony lub nie należy do tego klienta"}), 404
 
+    rasa = Rasa.query.get(zwierzak.id_rasy)
+    gatunek = Gatunki.query.get(rasa.id_gatunku) if rasa else None
+
     return jsonify({
         "id_pupila": zwierzak.id_pupila,
         "imie": zwierzak.imie,
         "wiek": zwierzak.wiek,
         "opis": zwierzak.opis,
         "plec": zwierzak.plec,
-        "id_rasy": zwierzak.id_rasy
+        "rasa": rasa.rasa if rasa else None,
+        "gatunek": gatunek.nazwa if gatunek else None
     }), 200
 
 # Endpoint do pobrania listy ras
 @app.route("/api/races", methods=["GET"])
 def get_races():
-    try:
+    id_gatunku = request.args.get("id_gatunku", type=int)
+
+    if id_gatunku:
+        rasy = Rasa.query.filter_by(id_gatunku=id_gatunku).all()
+    else:
         rasy = Rasa.query.all()
-        if not rasy:
-            return jsonify({"error": "Brak ras w bazie danych."}), 404
-        wynik = [{"id_rasy": rasa.id_rasy, "nazwa": rasa.nazwa} for rasa in rasy]
-        return jsonify(wynik), 200
-    except Exception as e:
-        print(f"Błąd podczas pobierania ras: {e}")
-        return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
+
+    if not rasy:
+        return jsonify({"error": "Brak ras w bazie danych."}), 404
+
+    wynik = [
+        {"id_rasy": rasa.id_rasy, "rasa": rasa.rasa, "id_gatunku": rasa.id_gatunku}
+        for rasa in rasy
+    ]
+    return jsonify(wynik), 200
+
 
 # Endpoint do pobrania listy pupili zalogowanego użytkownika
 @app.route("/api/my-pets", methods=["GET"])
@@ -467,6 +491,7 @@ def get_completed_appointments(aktualny_klient):
         print(f"Błąd podczas pobierania zrealizowanych wizyt: {e}")
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
 
+
 # Endpoint do pobierania wolnych terminów
 @app.route("/api/available-slots", methods=["GET"])
 def get_available_slots():
@@ -478,8 +503,14 @@ def get_available_slots():
         if not all([date_from, date_to, id_weterynarza]):
             return jsonify({"error": "Brak wymaganych parametrów"}), 400
 
-        date_from = datetime.strptime(date_from, "%Y-%m-%d")
-        date_to = datetime.strptime(date_to, "%Y-%m-%d")
+        date_from = datetime.strptime(date_from, "%Y-%m-%d").date()
+        date_to = datetime.strptime(date_to, "%Y-%m-%d").date()
+
+        teraz = datetime.now()
+        if date_to < teraz.date():
+            return jsonify({"error": "Nie można pobierać terminów w przeszłości"}), 400
+        if date_from < teraz.date():
+            date_from = teraz.date()
 
         weterynarz = Weterynarze.query.filter_by(id_pracownika=id_weterynarza).first()
         pracownik = Pracownik.query.filter_by(id_pracownika=id_weterynarza).first()
@@ -487,7 +518,7 @@ def get_available_slots():
         if not weterynarz or not pracownik:
             return jsonify({"error": "Nie znaleziono weterynarza"}), 404
 
-        opening_hour = datetime.strptime("08:00", "%H:%M").time()
+        opening_hour = datetime.strptime("09:00", "%H:%M").time()
         closing_hour = datetime.strptime("18:00", "%H:%M").time()
 
         booked_slots = Terminarz.query.join(WizytaWeterynarz).filter(
@@ -497,25 +528,38 @@ def get_available_slots():
 
         occupied_times = {(slot.data_wizyty, slot.godzina_wizyty_od.time()) for slot in booked_slots}
 
-        free_slots = []
+        all_slots = []
         current_date = date_from
         while current_date <= date_to:
             current_time = opening_hour
             while current_time < closing_hour:
-                slot_available = (current_date.date(), current_time) not in occupied_times
-                free_slots.append({
+                is_available = (current_date, current_time) not in occupied_times and (
+                    current_date > teraz.date() or (current_date == teraz.date() and current_time > teraz.time())
+                )
+                all_slots.append({
                     "date": current_date.strftime("%Y-%m-%d"),
                     "time": current_time.strftime("%H:%M"),
-                    "available": slot_available
+                    "available": is_available
                 })
                 current_time = (datetime.combine(datetime.today(), current_time) + timedelta(minutes=30)).time()
             current_date += timedelta(days=1)
 
-        return jsonify(free_slots), 200
+        return jsonify(all_slots), 200
 
     except Exception as e:
         print(f"Błąd podczas pobierania wolnych terminów: {e}")
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
+
+# Pobranie listy gatunków
+@app.route("/api/species", methods=["GET"])
+def get_species():
+    gatunki = Gatunki.query.all()
+    if not gatunki:
+        return jsonify({"error": "Brak gatunków w bazie danych."}), 404
+
+    wynik = [{"id_gatunku": g.id_gatunku, "nazwa": g.nazwa} for g in gatunki]
+    return jsonify(wynik), 200
+
 
 # METODY PUT
 
@@ -529,11 +573,16 @@ def edit_pet_details(aktualny_klient, pet_id):
     if not zwierzak:
         return jsonify({"error": "Zwierzak nie został znaleziony lub nie należy do tego klienta"}), 404
 
+    if "id_rasy" in dane:
+        rasa = Rasa.query.get(dane["id_rasy"])
+        if not rasa:
+            return jsonify({"error": "Wybrana rasa nie istnieje"}), 400
+        zwierzak.id_rasy = dane["id_rasy"]
+
     zwierzak.imie = dane.get("imie", zwierzak.imie)
     zwierzak.wiek = dane.get("wiek", zwierzak.wiek)
     zwierzak.opis = dane.get("opis", zwierzak.opis)
     zwierzak.plec = dane.get("plec", zwierzak.plec)
-    zwierzak.id_rasy = dane.get("id_rasy", zwierzak.id_rasy)
 
     db.session.commit()
     return jsonify({"message": "Zwierzak został zaktualizowany"}), 200

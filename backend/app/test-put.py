@@ -1,7 +1,7 @@
 import requests
 
 url = "http://localhost:5000"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZXhwIjoxNzM2NDcwMzc3fQ.wUvTpfP7YqSSoCo5Bevo8r-Q90re__gSRWmGB3TZ3IQ"
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZXhwIjoxNzM2Njk3MDQ5fQ.P9jdqvtkuGB-VEs1ZuOA2mvHsLqjyLqQ3pByoh52PbI"
 # Token uzyskany poprzez zalogowanie klientki Julia Portka
 
 headers = {

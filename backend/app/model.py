@@ -125,11 +125,19 @@ class Zwierzak(db.Model):
     id_klienta = db.Column(db.Integer, db.ForeignKey('klienci.id_klienta'), nullable=False)
     id_rasy = db.Column(db.Integer, db.ForeignKey('rasa.id_rasy'), nullable=False)
 
+class Gatunki(db.Model):
+    _tablename_ = 'gatunki'
+    id_gatunku = db.Column(db.Integer, primary_key=True, nullable=False)
+    nazwa = db.Column(db.String(50), nullable=False)
+
+    rasy = db.relationship('Rasa', backref='gatunek', lazy=True)
+
+
 class Rasa(db.Model):
     _tablename_ = 'rasa'
     id_rasy = db.Column(db.Integer, primary_key=True, nullable=False)
-    nazwa = db.Column(db.String(20), nullable=False)
-    nazwa_dluga = db.Column(db.String(40))
+    rasa = db.Column(db.String(50), nullable=False)
+    id_gatunku = db.Column(db.Integer, db.ForeignKey('gatunki.id_gatunku'), nullable=False)
     cechy_charakterystyczne = db.Column(db.String(2000))
 
     zwierzaki = db.relationship('Zwierzak', backref='rasa', lazy=True)
