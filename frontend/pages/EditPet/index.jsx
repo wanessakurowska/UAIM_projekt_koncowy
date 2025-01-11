@@ -10,6 +10,7 @@ const EditPet = () => {
     wiek: "",
     opis: "",
     plec: "",
+    id_gatunku: "",
     id_rasy: "",
   });
   const [success, setSuccess] = useState(false);
@@ -39,7 +40,7 @@ const EditPet = () => {
     try {
       await apiClient.put(`/api/pet-details/${id}/edit`, formData);
       setSuccess(true);
-      setTimeout(() => navigate("/pets"), 2000);
+      setTimeout(() => navigate("/my-pets"), 2000);
     } catch (err) {
       console.error("Error updating pet details:", err);
       setError("Nie udało się zaktualizować danych zwierzaka.");
@@ -94,11 +95,20 @@ const EditPet = () => {
           </select>
         </label>
         <label>
+          Gatunek:
+          <input
+            type="text"
+            name="id_gatunku"
+            value={formData.gatunek}
+            readOnly
+          />
+        </label>
+        <label>
           Rasa:
           <input
             type="text"
             name="id_rasy"
-            value={formData.id_rasy}
+            value={formData.rasa}
             readOnly
           />
         </label>

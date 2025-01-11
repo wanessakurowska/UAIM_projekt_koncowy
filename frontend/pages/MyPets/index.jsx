@@ -41,6 +41,7 @@ const MyPets = () => {
             <th>Wiek</th>
             <th>Płeć</th>
             <th>Rasa</th>
+            <th>Gatunek</th>
             <th>Akcje</th>
           </tr>
         </thead>
@@ -51,6 +52,7 @@ const MyPets = () => {
               <td>{pet.wiek}</td>
               <td>{pet.plec === "M" ? "Samiec" : "Samica"}</td>
               <td>{pet.rasa}</td>
+              <td>{pet.gatunek}</td>
               <td>
                 <button onClick={() => handleSelectPet(pet.id_pupila)}>
                   Pokaż szczegóły
@@ -67,7 +69,8 @@ const MyPets = () => {
           <p>Wiek: {selectedPet.wiek}</p>
           <p>Opis: {selectedPet.opis}</p>
           <p>Płeć: {selectedPet.plec === "M" ? "Samiec" : "Samica"}</p>
-          <p>Rasa: {selectedPet.id_rasy}</p>
+          <p>Rasa: {selectedPet.rasa}</p>
+          <p>Gatunek: {selectedPet.gatunek}</p>
           <button
             onClick={() =>
               (window.location.href = `/edit-pet/${selectedPet.id_pupila}`)

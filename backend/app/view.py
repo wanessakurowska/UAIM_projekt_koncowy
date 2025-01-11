@@ -131,6 +131,10 @@ def book_appointment(aktualny_klient):
     if termin <= teraz:
         return jsonify({"error": "Nie można umawiać wizyt na daty w przeszłości"}), 400
     
+    # Sprawdzanie, czy termin przypada na weekend
+    if termin.weekday() >= 5:  # 5 - sobota, 6 - niedziela
+        return jsonify({"error": "Nie można umawiać wizyt w weekendy"}), 400
+    
     # Sprawdzanie godzin pracy kliniki
     opening_hour = datetime.strptime("08:00", "%H:%M").time()
     closing_hour = datetime.strptime("18:00", "%H:%M").time()
@@ -170,6 +174,7 @@ def book_appointment(aktualny_klient):
         "id_pupila": id_pupila,
         "opis_dolegliwosci": opis_dolegliwosci
     }), 201
+
 
 
 # Dodaj zwierzaka
@@ -429,7 +434,8 @@ def get_my_pets(aktualny_klient):
             "opis": zwierzak.opis,
             "wiek": zwierzak.wiek,
             "plec": zwierzak.plec,
-            "rasa": zwierzak.rasa.nazwa if zwierzak.rasa else "Nieznana rasa",
+            "rasa": zwierzak.rasa.rasa if zwierzak.rasa else "Nieznana rasa",
+            "gatunek": zwierzak.rasa.gatunek.nazwa if zwierzak.rasa and zwierzak.rasa.gatunek else "Nieznany gatunek",
         }
         for zwierzak in zwierzaki
     ]
@@ -481,7 +487,7 @@ def get_completed_appointments(aktualny_klient):
                 },
                 "pupil": {
                     "imie": pupil.imie,
-                    "rasa": pupil.rasa.nazwa,
+                    "rasa": pupil.rasa.rasa,
                     "wiek": pupil.wiek
                 }
             })
