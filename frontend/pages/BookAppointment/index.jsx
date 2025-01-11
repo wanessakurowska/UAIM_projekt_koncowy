@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import apiClient from "../../api";
 import "./bookAppointment.css";
 
 const BookAppointment = () => {
+  const location = useLocation();
+  const { date, time, veterinarianId } = location.state || {};
+
   const [veterinarians, setVeterinarians] = useState([]);
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState("");
-  const [veterinarianId, setVeterinarianId] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
@@ -79,18 +80,22 @@ const BookAppointment = () => {
           </select>
         </label>
         <label>
-          Wybierz weterynarza:
-          <select
-            value={veterinarianId}
-            onChange={(e) => setVeterinarianId(e.target.value)}
-          >
-            <option value="">-- Wybierz weterynarza --</option>
+          Weterynarz:
+          <select value={veterinarianId} disabled>
             {veterinarians.map((vet) => (
               <option key={vet.id} value={vet.id}>
                 {vet.imię} {vet.nazwisko}
               </option>
             ))}
           </select>
+        </label>
+        <label>
+          Data:
+          <input type="date" value={date} readOnly />
+        </label>
+        <label>
+          Godzina:
+          <input type="time" value={time} readOnly />
         </label>
         <label>
           Wybierz usługę:
@@ -102,22 +107,6 @@ const BookAppointment = () => {
             <option value="1">Szczepienie</option>
             <option value="2">Badanie kontrolne</option>
           </select>
-        </label>
-        <label>
-          Wybierz datę:
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </label>
-        <label>
-          Wybierz godzinę:
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-          />
         </label>
         <label>
           Opis dolegliwości:

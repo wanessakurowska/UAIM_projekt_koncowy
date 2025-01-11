@@ -60,7 +60,14 @@ const AppointmentCalendar = () => {
   };
 
   const handleSlotClick = (slot) => {
-    navigate("/book-appointment", { state: { slot, veterinarianId: selectedVeterinarian } });
+    const [date, time] = slot.split("T");
+    navigate("/book-appointment", {
+      state: {
+        date,
+        time,
+        veterinarianId: selectedVeterinarian,
+      },
+    });
   };
 
   return (
