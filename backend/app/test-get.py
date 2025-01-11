@@ -9,6 +9,7 @@ headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {token}"
 }
+
 #TEST DLA GET veterinarian-list
 print("TEST DLA GET veterinarian-list")
 
@@ -140,3 +141,39 @@ print("[Przypadek negatywny] bez tokenu")
 r = requests.get(f"{url}/client-appointments", headers=headers)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
+
+
+# TESTY DLA GET available-slots
+print("TESTY DLA GET available-slots")
+
+# Przykład pozytywny: poprawne dane, wolne terminy
+print("\n[Przypadek pozytywny]: Poprawne dane, wolne terminy")
+params = {
+    "date_from": "2025-01-15",
+    "date_to": "2025-01-16",
+    "id_weterynarza": 1
+}
+r = requests.get(f"{url}/api/available-slots", params=params, headers=headers)
+print("Status code:", r.status_code)
+print("Odpowiedź serwera:", r.json())
+
+# Przykład negatywny: nieistniejący weterynarz
+print("\n[Przypadek negatywny]: Nieistniejący weterynarz")
+params = {
+    "date_from": "2025-01-15",
+    "date_to": "2025-01-16",
+    "id_weterynarza": 999
+}
+r = requests.get(f"{url}/api/available-slots", params=params, headers=headers)
+print("Status code:", r.status_code)
+print("Odpowiedź serwera:", r.json())
+
+# Przykład negatywny: brak jednego z wymaganych parametrów
+print("\n[Przypadek negatywny]: Brak jednego z wymaganych parametrów (id_weterynarza)")
+params = {
+    "date_from": "2025-01-15",
+    "date_to": "2025-01-16"
+}
+r = requests.get(f"{url}/api/available-slots", params=params, headers=headers)
+print("Status code:", r.status_code)
+print("Odpowiedź serwera:", r.text)

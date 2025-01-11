@@ -10,6 +10,7 @@ import CompletedAppointments from "./pages/CompletedAppointments";
 import AddPet from "./pages/AddPet";
 import EditPet from "./pages/EditPet";
 import MyPets from "./pages/MyPets";
+import BookAppointment from "./pages/BookAppointment";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -23,8 +24,30 @@ function App() {
       <Routes>
         <Route path="/services" element={<Services />} />
         <Route path="/veterinarians" element={<Veterinarians />} />
-        <Route path="/appointment-calendar" element={<AppointmentCalendar />} />
-        <Route path="/completed-appointments" element={<CompletedAppointments/>} />
+        <Route
+          path="/appointment-calendar"
+          element={
+            <PrivateRoute>
+              <AppointmentCalendar />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/book-appointment"
+          element={
+            <PrivateRoute>
+              <BookAppointment />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/completed-appointments"
+          element={
+            <PrivateRoute>
+              <CompletedAppointments />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/my-pets"
           element={

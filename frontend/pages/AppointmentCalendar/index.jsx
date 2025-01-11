@@ -1,214 +1,126 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import apiClient from "../../api";
 import "./calendar.css";
 
 const AppointmentCalendar = () => {
   const [veterinarians, setVeterinarians] = useState([]);
-  const [services, setServices] = useState([]);
-  const [veterinarianId, setVeterinarianId] = useState("");
-  const [serviceId, setServiceId] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [petId, setPetId] = useState("");
-  const [opisDolegliwosci, setOpisDolegliwosci] = useState("");
-  const [pets, setPets] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [dates, setDates] = useState([]);
+  const [selectedDateRange, setSelectedDateRange] = useState({ from: "", to: "" });
+  const [selectedVeterinarian, setSelectedVeterinarian] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isAvailable, setIsAvailable] = useState(false);
-  const hours = Array.from({ length: 13 }, (_, i) => (8 + i).toString().padStart(2, "0"));
-  const minutes = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, "0"));
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchVeterinarians = async () => {
       try {
-        const vetResponse = await apiClient.get("/veterinarian-list");
-        setVeterinarians(vetResponse.data);
-
-        const serviceResponse = await apiClient.get("/service-list");
-        setServices(serviceResponse.data);
-
-        const petResponse = await apiClient.get("/api/my-pets");
-        setPets(petResponse.data);
+        const response = await apiClient.get("/veterinarian-list");
+        setVeterinarians(response.data);
       } catch (err) {
-        console.error("Błąd podczas pobierania danych:", err);
-        setError("Nie udało się załadować danych.");
+        console.error("Błąd podczas pobierania listy weterynarzy:", err);
+        setError("Nie udało się załadować listy weterynarzy.");
       }
     };
 
-    fetchData();
+    fetchVeterinarians();
   }, []);
 
-  const checkAvailability = async () => {
-    setSuccess("");
+  const fetchAvailableSlots = async () => {
     setError("");
+    setAvailableSlots([]);
+    setDates([]);
 
-    if (!veterinarianId || !selectedDate || !selectedTime) {
-      setError("Wybierz weterynarza, datę i godzinę, aby sprawdzić dostępność.");
+    if (!selectedVeterinarian || !selectedDateRange.from || !selectedDateRange.to) {
+      setError("Wybierz weterynarza i zakres dat.");
       return;
     }
 
-    const formattedTime = `${selectedDate}T${selectedTime}`;
-
     try {
-      const response = await apiClient.get("/api/vet-availability", {
+      const response = await apiClient.get("/api/available-slots", {
         params: {
-          id_weterynarza: parseInt(veterinarianId),
-          data_wizyty: selectedDate,
-          godzina_wizyty_od: formattedTime,
+          date_from: selectedDateRange.from,
+          date_to: selectedDateRange.to,
+          id_weterynarza: selectedVeterinarian,
         },
       });
 
-      if (response.data.available) {
-        setSuccess("Termin jest dostępny! Możesz go zarezerwować.");
-        setIsAvailable(true);
-      } else {
-        setError("Termin jest zajęty.");
-        setIsAvailable(false);
-      }
+      const uniqueDates = [...new Set(response.data.map((slot) => slot.date))];
+      setDates(uniqueDates);
+      setAvailableSlots(
+        response.data.map((slot) => ({
+          slot: `${slot.date}T${slot.time}`,
+          available: slot.available,
+        }))
+      );
     } catch (err) {
-      console.error("Błąd podczas sprawdzania dostępności:", err);
-      setError("Nie udało się sprawdzić dostępności terminu.");
-      setIsAvailable(false);
+      console.error("Błąd podczas pobierania wolnych terminów:", err);
+      setError("Nie udało się pobrać wolnych terminów.");
     }
   };
 
-  const bookAppointment = async () => {
-    setSuccess("");
-    setError("");
-
-    if (!petId || !serviceId || !opisDolegliwosci.trim()) {
-      setError("Wszystkie pola są wymagane.");
-      return;
-    }
-
-    const formattedTime = `${selectedDate}T${selectedTime}`;
-
-    try {
-      await apiClient.post("/api/book-appointment", {
-          id_pupila: parseInt(petId),
-          id_weterynarza: parseInt(veterinarianId),
-          data_wizyty: selectedDate,
-          godzina_wizyty_od: formattedTime,
-          id_uslugi: parseInt(serviceId),
-          opis_dolegliwosci: opisDolegliwosci
-        });
-
-      setSuccess("Termin został pomyślnie zarezerwowany!");
-      setIsAvailable(false);
-      setOpisDolegliwosci("");
-    } catch (err) {
-      console.error("Błąd podczas rezerwacji terminu:", err);
-      setError("Nie udało się zarezerwować terminu.");
-    }
+  const handleSlotClick = (slot) => {
+    navigate("/book-appointment", { state: { slot, veterinarianId: selectedVeterinarian } });
   };
 
   return (
     <div className="calendar-container">
-      <h1>Rezerwacja wizyty</h1>
-      {success && <p className="success">{success}</p>}
+      <h1>Kalendarz wizyt</h1>
       {error && <p className="error">{error}</p>}
-      <form>
-        <label>
-          Wybierz weterynarza:
-          <select
-            value={veterinarianId}
-            onChange={(e) => setVeterinarianId(e.target.value)}
-            required
-          >
-            <option value="">-- Wybierz weterynarza --</option>
-            {veterinarians.map((vet) => (
-              <option key={vet.id} value={vet.id}>
-                {vet.imię} {vet.nazwisko}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Wybierz usługę:
-          <select
-            value={serviceId}
-            onChange={(e) => setServiceId(e.target.value)}
-            required
-          >
-            <option value="">-- Wybierz usługę --</option>
-            {services.map((service) => (
-              <option key={service.id} value={service.id}>
-                {service.nazwa} - {service.cena} zł
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Wybierz datę wizyty:
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Wybierz godzinę wizyty:
-          <div style={{ display: "flex", gap: "10px" }}>
-            <select
-              value={selectedTime.split(":")[0]}
-              onChange={(e) =>
-                setSelectedTime(`${e.target.value}:${selectedTime.split(":")[1]}`)
-              }
-            >
-              <option value="">Godzina</option>
-              {hours.map((hour) => (
-                <option key={hour} value={hour}>
-                  {hour}
-                </option>
+      <div className="form-inline">
+        <select
+          value={selectedVeterinarian}
+          onChange={(e) => setSelectedVeterinarian(e.target.value)}
+        >
+          <option value="">-- Wybierz weterynarza --</option>
+          {veterinarians.map((vet) => (
+            <option key={vet.id} value={vet.id}>
+              {vet.imię} {vet.nazwisko}
+            </option>
+          ))}
+        </select>
+        <input
+          type="date"
+          value={selectedDateRange.from}
+          onChange={(e) =>
+            setSelectedDateRange({ ...selectedDateRange, from: e.target.value })
+          }
+        />
+        <input
+          type="date"
+          value={selectedDateRange.to}
+          onChange={(e) =>
+            setSelectedDateRange({ ...selectedDateRange, to: e.target.value })
+          }
+        />
+        <button type="button" onClick={fetchAvailableSlots}>
+          Pokaż wolne terminy
+        </button>
+      </div>
+      <div className="calendar">
+        {dates.map((date) => (
+          <div key={date} className="day-column">
+            <h3>
+              {new Date(date).toLocaleDateString("pl-PL", {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+              })}
+            </h3>
+            {availableSlots
+              .filter((slot) => slot.slot.startsWith(date))
+              .map((slot) => (
+                <div
+                  key={slot.slot}
+                  className={`time-slot ${slot.available ? "available" : "unavailable"}`}
+                  onClick={() => slot.available && handleSlotClick(slot.slot)}
+                >
+                  {slot.slot.split("T")[1]}
+                </div>
               ))}
-            </select>
-            <select
-              value={selectedTime.split(":")[1]}
-              onChange={(e) =>
-                setSelectedTime(`${selectedTime.split(":")[0]}:${e.target.value}`)
-              }
-            >
-              <option value="">Minuty</option>
-              {minutes.map((minute) => (
-                <option key={minute} value={minute}>
-                  {minute}
-                </option>
-              ))}
-            </select>
           </div>
-        </label>
-        <label>
-          Wybierz pupila:
-          <select value={petId} onChange={(e) => setPetId(e.target.value)} required>
-            <option value="">-- Wybierz pupila --</option>
-            {pets.map((pet) => (
-              <option key={pet.id_pupila} value={pet.id_pupila}>
-                {pet.imie} - {pet.rasa} ({pet.wiek} lat)
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Opis dolegliwości:
-          <textarea
-            value={opisDolegliwosci}
-            onChange={(e) => setOpisDolegliwosci(e.target.value)}
-            placeholder="Opisz dolegliwości pupila"
-            required
-            onInput={(e) => {
-              e.target.style.height = "auto"; // Resetuje wysokość
-              e.target.style.height = `${e.target.scrollHeight}px`; // Ustawia wysokość na podstawie zawartości
-            }}
-          ></textarea>
-        </label>
-        <button type="button" onClick={checkAvailability}>
-          Sprawdź dostępność
-        </button>
-        <button type="button" onClick={bookAppointment} disabled={!isAvailable}>
-          Zarezerwuj termin
-        </button>
-      </form>
+        ))}
+      </div>
     </div>
   );
 };

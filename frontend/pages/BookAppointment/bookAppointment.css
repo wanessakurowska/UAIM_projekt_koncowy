@@ -1,0 +1,61 @@
+.book-appointment-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .book-appointment-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .book-appointment-container label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+  }
+  
+  .book-appointment-container input,
+  .book-appointment-container textarea,
+  .book-appointment-container select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .book-appointment-container textarea {
+    resize: none;
+    height: 100px;
+  }
+  
+  .book-appointment-container button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .book-appointment-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .book-appointment-container .success {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .book-appointment-container .error {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+  }
+  

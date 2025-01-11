@@ -468,6 +468,58 @@ def get_completed_appointments(aktualny_klient):
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
 
 
+# Endpoint do pobierania wolnych terminów
+@app.route("/api/available-slots", methods=["GET"])
+def get_available_slots():
+    try:
+        date_from = request.args.get("date_from", type=str)
+        date_to = request.args.get("date_to", type=str)
+        id_weterynarza = request.args.get("id_weterynarza", type=int)
+
+        if not all([date_from, date_to, id_weterynarza]):
+            return jsonify({"error": "Brak wymaganych parametrów"}), 400
+
+        date_from = datetime.strptime(date_from, "%Y-%m-%d")
+        date_to = datetime.strptime(date_to, "%Y-%m-%d")
+
+        weterynarz = Weterynarze.query.filter_by(id_pracownika=id_weterynarza).first()
+        pracownik = Pracownik.query.filter_by(id_pracownika=id_weterynarza).first()
+
+        if not weterynarz or not pracownik:
+            return jsonify({"error": "Nie znaleziono weterynarza"}), 404
+
+        opening_hour = datetime.strptime("08:00", "%H:%M").time()
+        closing_hour = datetime.strptime("18:00", "%H:%M").time()
+
+        booked_slots = Terminarz.query.join(WizytaWeterynarz).filter(
+            Terminarz.data_wizyty.between(date_from, date_to),
+            WizytaWeterynarz.id_pracownika == id_weterynarza
+        ).all()
+
+        occupied_times = {(slot.data_wizyty, slot.godzina_wizyty_od.time()) for slot in booked_slots}
+
+        free_slots = []
+        current_date = date_from
+        while current_date <= date_to:
+            current_time = opening_hour
+            while current_time < closing_hour:
+                slot_available = (current_date.date(), current_time) not in occupied_times
+                free_slots.append({
+                    "date": current_date.strftime("%Y-%m-%d"),
+                    "time": current_time.strftime("%H:%M"),
+                    "available": slot_available
+                })
+                current_time = (datetime.combine(datetime.today(), current_time) + timedelta(minutes=30)).time()
+            current_date += timedelta(days=1)
+
+        return jsonify(free_slots), 200
+
+    except Exception as e:
+        print(f"Błąd podczas pobierania wolnych terminów: {e}")
+        return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
+
+
+
 # METODY PUT
 
 # Edycja danych zwierzaka
