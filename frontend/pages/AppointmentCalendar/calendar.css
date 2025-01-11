@@ -81,3 +81,11 @@ h1 {
   color: #999;
   cursor: not-allowed;
 }
+
+.calendar-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+

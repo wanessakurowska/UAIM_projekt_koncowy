@@ -104,8 +104,10 @@ const BookAppointment = () => {
             onChange={(e) => setSelectedService(e.target.value)}
           >
             <option value="">-- Wybierz usługę --</option>
-            <option value="1">Szczepienie</option>
-            <option value="2">Badanie kontrolne</option>
+            <option value="1">Badanie kontrolne</option>
+            <option value="2">Szczepienie</option>
+            <option value="3">Sterylizacja</option>
+            <option value="4">Czipowanie</option>
           </select>
         </label>
         <label>

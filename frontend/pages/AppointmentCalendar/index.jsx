@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../api";
 import "./calendar.css";
@@ -6,11 +6,12 @@ import "./calendar.css";
 const AppointmentCalendar = () => {
   const [veterinarians, setVeterinarians] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
-  const [dates, setDates] = useState([]);
-  const [selectedDateRange, setSelectedDateRange] = useState({ from: "", to: "" });
+  const [currentDates, setCurrentDates] = useState([]); // Daty aktualnie widoczne na stronie
   const [selectedVeterinarian, setSelectedVeterinarian] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const daysToShow = 7; // Liczba dni wyświetlanych w jednym widoku
 
   useEffect(() => {
     const fetchVeterinarians = async () => {
@@ -24,40 +25,52 @@ const AppointmentCalendar = () => {
     };
 
     fetchVeterinarians();
+
+    // Ustaw daty początkowe (dziś i kolejne 6 dni)
+    const startDate = new Date();
+    const initialDates = Array.from({ length: daysToShow }, (_, i) =>
+      new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000)
+    );
+    setCurrentDates(initialDates);
   }, []);
 
-  const fetchAvailableSlots = async () => {
-    setError("");
-    setAvailableSlots([]);
-    setDates([]);
+  // Użyj useCallback, aby funkcja była stabilna między renderami
+  const fetchAvailableSlots = useCallback(async () => {
+      setError("");
+      setAvailableSlots([]);
 
-    if (!selectedVeterinarian || !selectedDateRange.from || !selectedDateRange.to) {
-      setError("Wybierz weterynarza i zakres dat.");
-      return;
+      if (!selectedVeterinarian) {
+        setError("Wybierz weterynarza.");
+        return;
+      }
+
+      try {
+        const response = await apiClient.get("/api/available-slots", {
+          params: {
+            date_from: currentDates[0].toISOString().split("T")[0],
+            date_to: currentDates[currentDates.length - 1].toISOString().split("T")[0],
+            id_weterynarza: selectedVeterinarian,
+          },
+        });
+
+        setAvailableSlots(
+          response.data.map((slot) => ({
+            slot: `${slot.date}T${slot.time}`,
+            available: slot.available,
+          }))
+        );
+      } catch (err) {
+        console.error("Błąd podczas pobierania wolnych terminów:", err);
+        setError("Nie udało się pobrać wolnych terminów.");
+      }
+    }, [selectedVeterinarian, currentDates]); // Dodaj selectedVeterinarian jako zależność
+
+  useEffect(() => {
+    if (selectedVeterinarian) {
+      fetchAvailableSlots();
     }
+  }, [fetchAvailableSlots, selectedVeterinarian]); // Dodaj selectedVeterinarian tutaj
 
-    try {
-      const response = await apiClient.get("/api/available-slots", {
-        params: {
-          date_from: selectedDateRange.from,
-          date_to: selectedDateRange.to,
-          id_weterynarza: selectedVeterinarian,
-        },
-      });
-
-      const uniqueDates = [...new Set(response.data.map((slot) => slot.date))];
-      setDates(uniqueDates);
-      setAvailableSlots(
-        response.data.map((slot) => ({
-          slot: `${slot.date}T${slot.time}`,
-          available: slot.available,
-        }))
-      );
-    } catch (err) {
-      console.error("Błąd podczas pobierania wolnych terminów:", err);
-      setError("Nie udało się pobrać wolnych terminów.");
-    }
-  };
 
   const handleSlotClick = (slot) => {
     const [date, time] = slot.split("T");
@@ -68,6 +81,22 @@ const AppointmentCalendar = () => {
         veterinarianId: selectedVeterinarian,
       },
     });
+  };
+
+  // Przesuń zakres dat w przód
+  const nextDates = () => {
+    const newDates = currentDates.map(
+      (date) => new Date(date.getTime() + daysToShow * 24 * 60 * 60 * 1000)
+    );
+    setCurrentDates(newDates);
+  };
+
+  // Przesuń zakres dat w tył
+  const prevDates = () => {
+    const newDates = currentDates.map(
+      (date) => new Date(date.getTime() - daysToShow * 24 * 60 * 60 * 1000)
+    );
+    setCurrentDates(newDates);
   };
 
   return (
@@ -86,36 +115,27 @@ const AppointmentCalendar = () => {
             </option>
           ))}
         </select>
-        <input
-          type="date"
-          value={selectedDateRange.from}
-          onChange={(e) =>
-            setSelectedDateRange({ ...selectedDateRange, from: e.target.value })
-          }
-        />
-        <input
-          type="date"
-          value={selectedDateRange.to}
-          onChange={(e) =>
-            setSelectedDateRange({ ...selectedDateRange, to: e.target.value })
-          }
-        />
-        <button type="button" onClick={fetchAvailableSlots}>
-          Pokaż wolne terminy
+      </div>
+      <div className="calendar-navigation">
+        <button onClick={prevDates} className="navigation-button">
+          ◀
+        </button>
+        <button onClick={nextDates} className="navigation-button">
+          ▶
         </button>
       </div>
       <div className="calendar">
-        {dates.map((date) => (
-          <div key={date} className="day-column">
+        {currentDates.map((date) => (
+          <div key={date.toISOString()} className="day-column">
             <h3>
-              {new Date(date).toLocaleDateString("pl-PL", {
+              {date.toLocaleDateString("pl-PL", {
                 weekday: "short",
                 day: "numeric",
                 month: "short",
               })}
             </h3>
             {availableSlots
-              .filter((slot) => slot.slot.startsWith(date))
+              .filter((slot) => slot.slot.startsWith(date.toISOString().split("T")[0]))
               .map((slot) => (
                 <div
                   key={slot.slot}
