@@ -1,34 +1,126 @@
+.my-pets-page {
+  background-image: url("/public/images/łapkiVetSlay5.png"); /* Tło */
+  background-size: cover; /* Dopasowanie tła */
+  background-position: center; /* Wyśrodkowanie tła */
+  min-height: 86vh; /* Wysokość strony */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .my-pets-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .pets-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .pets-table th,
-  .pets-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .pets-table th {
-    background-color: #f2f2f2;
-  }
-  
-  .error {
-    color: red;
-    font-weight: bold;
-  }
-  
-  .pet-details {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-  }
-  
+  font-family: 'Rajdhani', sans-serif; /* Profesjonalna czcionka */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Półprzezroczyste białe tło */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
+  max-width: 1200px;
+  margin: 10px 10px; /* Wyśrodkowanie kontenera */
+}
+
+.my-pets-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 5px 0;
+  color: #000000; /* Kolor nagłówka */
+  text-transform: uppercase;
+}
+
+.pets-table-container {
+  background-color: #ffffff; /* Białe tło dla tabeli */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lekki cień */
+}
+
+.pets-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #ffffff; /* Tło tabeli */
+  border-radius: 5px; /* Zaokrąglenie rogów */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lekki cień tabeli */
+}
+
+.pets-table th,
+.pets-table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.pets-table th {
+  background-color: #ADCBD3; /* Kolor nagłówków tabeli */
+  color: white;
+  text-transform: uppercase;
+}
+
+.pets-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Delikatny pasek wiersza */
+}
+
+.pets-table tr:hover {
+  background-color: #e9ecef; /* Jasne podświetlenie wiersza */
+  transition: background-color 0.3s ease;
+}
+
+.pet-details {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
+}
+
+.pet-details h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+.pet-details p {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.pet-details button {
+  padding: 10px 20px;
+  font-size: 0.8rem;
+  color: white;
+  background-color: #ADCBD3; /* Kolor przycisku */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pet-details button:hover {
+  background-color: #98b3bb;
+}
+
+.pets-button {
+  padding: 10px 15px;
+  background-color: #ADCBD3; /* Kolor przycisku */
+  color: white; /* Kolor tekstu */
+  font-size: 14px;
+  font-family: 'Rajdhani', sans-serif; /* Czcionka */
+  border: none; /* Bez obramowania */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  cursor: pointer; /* Wskaźnik kursora */
+  transition: background-color 0.3s ease; /* Płynne przejście */
+}
+
+.pets-button:hover {
+  background-color: #98b3bb; /* Ciemniejszy kolor po najechaniu */
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
