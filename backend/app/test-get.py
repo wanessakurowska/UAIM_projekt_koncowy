@@ -2,7 +2,7 @@ import requests
 import json
 
 url = "http://localhost:5000"
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZXhwIjoxNzM2Njk3MDQ5fQ.P9jdqvtkuGB-VEs1ZuOA2mvHsLqjyLqQ3pByoh52PbI"
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZXhwIjoxNzM2NzgwNTE3fQ.q9RKNHS97jFQ5CpMk3jnXrwqeMcRbQL0pp0dbiO1VQw"
 # Token uzyskany poprzez zalogowanie klientki Julia Portka
 
 headers = {
@@ -93,16 +93,16 @@ print("TEST POZYTYWNY DLA GET client-appointments")
 
 # Przykład pozytywny: poprawny token 
 print("[Przypadek pozytywny] klient istnieje:")
-r = requests.get(f"{url}/client-appointments", headers=headers, params=params)
+r = requests.get(f"{url}/client-appointments", headers=headers)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
 #TEST POZYTYWNY DLA GET /api/my-pets
-print("\nTEST POZYTYWNY DLA GET /api/my-pets")
+print("TEST POZYTYWNY DLA GET /api/my-pets")
 
 # Przykład pozytywny: poprawny token 
-print("\n[Przypadek pozytywny] klient istnieje:")
-r = requests.get(f"{url}/api/my-pets", headers=headers, params=params)
+print("[Przypadek pozytywny] klient istnieje:")
+r = requests.get(f"{url}/api/my-pets", headers=headers)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
@@ -111,25 +111,7 @@ print("TEST POZYTYWNY DLA GET /api/completed-appointments")
 
 # Przykład pozytywny: poprawny token 
 print("[Przypadek pozytywny] klient istnieje:")
-r = requests.get(f"{url}/api/completed-appointments", headers=headers, params=params)
-print(json.dumps(r.json(), indent=4, ensure_ascii=False))
-print(r.status_code)
-
-#TESTY DLA GET appointment-details
-print("TESTY DLA GET appointment-details")
-
-# Przykład pozytywny: poprawne wizyta_id
-print("[Przypadek pozytywny] wizyta istnieje:")
-params = {"wizyta_id": 3}
-r = requests.get(f"{url}/appointment-details", headers=headers, params=params)
-print(json.dumps(r.json(), indent=4, ensure_ascii=False))
-print(r.status_code)
-
-# Przykład negatywny: brak tokenu
-print("[Przypadek negatywny] bez tokenu")
-headers.pop("Authorization")
-params = {"wizyta_id": 1}
-r = requests.get(f"{url}/appointment-details", headers=headers)
+r = requests.get(f"{url}/api/completed-appointments", headers=headers)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
@@ -147,9 +129,10 @@ print("TEST POZYTYWNY DLA GET /appointments-list")
 
 # Przykład pozytywny: poprawny token 
 print("[Przypadek pozytywny] klient istnieje:")
-r = requests.get(f"{url}/appointment-list", headers=headers, params=params)
+r = requests.get(f"{url}/appointment-list", headers=headers)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
+
 
 # TESTY DLA GET available-slots
 print("TESTY DLA GET available-slots")
@@ -258,3 +241,21 @@ if r.status_code == 404:
 else:
     print(f"\nTest nieudany: Otrzymano nieoczekiwany kod statusu {r.status_code}")
     print("\nTreść odpowiedzi:", r.text)
+
+#TESTY DLA GET appointment-details
+print("TESTY DLA GET appointment-details")
+
+# Przykład pozytywny: poprawne wizyta_id
+print("[Przypadek pozytywny] wizyta istnieje:")
+params = {"wizyta_id": 6}
+r = requests.get(f"{url}/appointment-details", headers=headers, params=params)
+print(json.dumps(r.json(), indent=4, ensure_ascii=False))
+print(r.status_code)
+
+# Przykład negatywny: brak tokenu
+print("[Przypadek negatywny] bez tokenu")
+headers.pop("Authorization")
+params = {"wizyta_id": 1}
+r = requests.get(f"{url}/appointment-details", headers=headers, params=params)
+print(json.dumps(r.json(), indent=4, ensure_ascii=False))
+print(r.status_code)

@@ -2,7 +2,7 @@ from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta
-from model import Weterynarze, Pracownik, Klinika, Uslugi, Terminarz, Zwierzak, WizytaWeterynarz, Klienci, Rasa, Gatunki
+from model import Weterynarze, Uslugi, Terminarz, Zwierzak, WizytaWeterynarz, Klienci, Rasa, Gatunki
 from main import app, db
 
 SECRET_KEY = "21xuaim2024Zx37"
@@ -113,7 +113,7 @@ def book_appointment(aktualny_klient):
     if not all([id_pupila, id_weterynarza, data_wizyty, godzina_wizyty_od, id_uslugi, opis_dolegliwosci]):
         return jsonify({"error": "Brak wymaganych danych"}), 400
     
-    weterynarz = Weterynarze.query.filter_by(id_pracownika=id_weterynarza).first()
+    weterynarz = Weterynarze.query.filter_by(id_weterynarza=id_weterynarza).first()
     if not weterynarz:
         return jsonify({"error": "Podany weterynarz nie istnieje"}), 404
     
@@ -144,7 +144,7 @@ def book_appointment(aktualny_klient):
     termin_zajety = Terminarz.query.join(WizytaWeterynarz).filter(
         Terminarz.data_wizyty == datetime.strptime(data_wizyty, "%Y-%m-%d").date(),
         Terminarz.godzina_wizyty_od == termin,
-        WizytaWeterynarz.id_pracownika == id_weterynarza
+        WizytaWeterynarz.id_weterynarza == id_weterynarza
     ).first()
     if termin_zajety:
         return jsonify({"error": "Termin jest już zajęty dla tego weterynarza"}), 400
@@ -161,7 +161,7 @@ def book_appointment(aktualny_klient):
 
     przypisanie_weterynarza = WizytaWeterynarz(
         id_wizyty=nowa_wizyta.id_wizyty,
-        id_pracownika=id_weterynarza
+        id_weterynarza=id_weterynarza
     )
     db.session.add(przypisanie_weterynarza)
     db.session.commit()
@@ -223,19 +223,15 @@ def get_veterinarians():
 
     wynik = []
     for weterynarz in weterynarze:
-        pracownik = Pracownik.query.get(weterynarz.id_pracownika)
-        if pracownik:
-            klinika = Klinika.query.get(pracownik.id_kliniki)
-            wynik.append({
-                "id": weterynarz.id_pracownika,
-                "imię": pracownik.imie,
-                "nazwisko": pracownik.nazwisko,
-                "doświadczenie": weterynarz.doswiadczenie,
-                "kwalifikacje": weterynarz.kwalifikacje,
-                "ocena": weterynarz.ocena,
-                "status": weterynarz.status,
-                "klinika": klinika.nazwa if klinika else None
-            })
+        wynik.append({
+            "id_weterynarza": weterynarz.id_weterynarza,
+            "imię": weterynarz.imie,
+            "nazwisko": weterynarz.nazwisko,
+            "doświadczenie": weterynarz.doswiadczenie,
+            "kwalifikacje": weterynarz.kwalifikacje,
+            "ocena": weterynarz.ocena,
+            "wyksztalcenie": weterynarz.wyksztalcenie,
+        })
 
     return jsonify(wynik), 200
 
@@ -297,7 +293,7 @@ def get_client_appointments(aktualny_klient):
 # Pobieranie szczegółów wizyty na podstawie ID
 @app.route('/appointment-details', methods=['GET'])
 @require_authorization
-def get_appointment_details(aktualny_klient):
+def get_appointment_details():
     # Pobierz wizyta_id z parametrów żądania
     wizyta_id = request.args.get('wizyta_id', type=int)
     if not wizyta_id:
@@ -329,9 +325,9 @@ def get_appointment_details(aktualny_klient):
     weterynarze = WizytaWeterynarz.query.filter_by(id_wizyty=wizyta.id_wizyty).all()
     weterynarz_szczegoly = [
         {
-            "id_pracownika": weterynarz.id_pracownika,
-            "imie": Pracownik.query.get(weterynarz.id_pracownika).imie,
-            "nazwisko": Pracownik.query.get(weterynarz.id_pracownika).nazwisko
+            "id_weterynarza": weterynarz.id_weterynarza,
+            "imie": Weterynarze.query.get(weterynarz.id_weterynarza).imie,
+            "nazwisko": Weterynarze.query.get(weterynarz.id_weterynarza).nazwisko
         }
         for weterynarz in weterynarze
     ]
@@ -365,7 +361,7 @@ def check_vet_availability():
     termin_zajety = Terminarz.query.join(WizytaWeterynarz).filter(
         Terminarz.data_wizyty == datetime.strptime(data_wizyty, "%Y-%m-%d").date(),
         Terminarz.godzina_wizyty_od == datetime.strptime(godzina_wizyty_od, "%Y-%m-%dT%H:%M"),
-        WizytaWeterynarz.id_pracownika == id_weterynarza
+        WizytaWeterynarz.id_weterynarza == id_weterynarza
     ).first()
 
     if termin_zajety:
@@ -452,7 +448,7 @@ def get_completed_appointments(aktualny_klient):
         # Pobierz wizyty powiązane z klientem
         query = (
             Terminarz.query.join(WizytaWeterynarz, Terminarz.id_wizyty == WizytaWeterynarz.id_wizyty)
-            .join(Pracownik, WizytaWeterynarz.id_pracownika == Pracownik.id_pracownika)
+            .join(Weterynarze, WizytaWeterynarz.id_weterynarza == Weterynarze.id_weterynarza)
             .join(Uslugi, Terminarz.id_uslugi == Uslugi.id_uslugi)
             .join(Zwierzak, Terminarz.id_pupila == Zwierzak.id_pupila)
             .filter(Terminarz.id_pupila.in_([z.id_pupila for z in aktualny_klient.zwierzaki]))
@@ -471,8 +467,8 @@ def get_completed_appointments(aktualny_klient):
 
         result = []
         for wizyta in wizyty:
-            weterynarz = Pracownik.query.get(
-                WizytaWeterynarz.query.filter_by(id_wizyty=wizyta.id_wizyty).first().id_pracownika
+            weterynarz = Weterynarze.query.get(
+                WizytaWeterynarz.query.filter_by(id_wizyty=wizyta.id_wizyty).first().id_weterynarza
             )
             usluga = Uslugi.query.get(wizyta.id_uslugi)
             pupil = Zwierzak.query.get(wizyta.id_pupila)
@@ -497,62 +493,6 @@ def get_completed_appointments(aktualny_klient):
         print(f"Błąd podczas pobierania zrealizowanych wizyt: {e}")
         return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
 
-# Endpoint do pobierania wizyt danego klienta
-@app.route("/appointment-list", methods=["GET"])
-@require_authorization
-def get_all_appointments(aktualny_klient):
-    try:
-        # Pobierz id_pupila z parametrów zapytania
-        id_pupila = request.args.get("id_pupila", type=int)
-
-        # Pobierz wizyty powiązane z klientem
-        query = (
-            Terminarz.query.join(WizytaWeterynarz, Terminarz.id_wizyty == WizytaWeterynarz.id_wizyty)
-            .join(Pracownik, WizytaWeterynarz.id_pracownika == Pracownik.id_pracownika)
-            .join(Uslugi, Terminarz.id_uslugi == Uslugi.id_uslugi)
-            .join(Zwierzak, Terminarz.id_pupila == Zwierzak.id_pupila)
-            .filter(Terminarz.id_pupila.in_([z.id_pupila for z in aktualny_klient.zwierzaki]))
-            .order_by(Terminarz.data_wizyty, Terminarz.godzina_wizyty_od)
-        )
-
-        # Dodaj filtr dla konkretnego pupila, jeśli jest podany
-        if id_pupila:
-            query = query.filter(Terminarz.id_pupila == id_pupila)
-
-        wizyty = query.all()
-
-        if not wizyty:
-            return jsonify({"message": "Brak zrealizowanych wizyt"}), 404
-
-        result = []
-        for wizyta in wizyty:
-            weterynarz = Pracownik.query.get(
-                WizytaWeterynarz.query.filter_by(id_wizyty=wizyta.id_wizyty).first().id_pracownika
-            )
-            usluga = Uslugi.query.get(wizyta.id_uslugi)
-            pupil = Zwierzak.query.get(wizyta.id_pupila)
-            result.append({
-                "id_wizyty": wizyta.id_wizyty,
-                "data_wizyty": wizyta.data_wizyty.strftime("%Y-%m-%d"),
-                "godzina_wizyty": wizyta.godzina_wizyty_od.strftime("%H:%M"),
-                "lekarz": f"{weterynarz.imie} {weterynarz.nazwisko}",
-                "powod_wizyty": wizyta.opis_dolegliwosci,
-                "usluga": {
-                    "nazwa": usluga.nazwa,
-                    "opis": usluga.opis,
-                    "cena": float(usluga.cena) if usluga.cena else None
-                },
-                "pupil": {
-                    "imie": pupil.imie,
-                    "rasa": pupil.rasa.rasa,
-                    "wiek": pupil.wiek
-                }
-            })
-
-        return jsonify(result), 200
-    except Exception as e:
-        print(f"Błąd podczas pobierania wizyt: {e}")
-        return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
 
 # Endpoint do pobierania wolnych terminów
 @app.route("/api/available-slots", methods=["GET"])
@@ -574,10 +514,9 @@ def get_available_slots():
         if date_from < teraz.date():
             date_from = teraz.date()
 
-        weterynarz = Weterynarze.query.filter_by(id_pracownika=id_weterynarza).first()
-        pracownik = Pracownik.query.filter_by(id_pracownika=id_weterynarza).first()
+        weterynarz = Weterynarze.query.filter_by(id_weterynarza=id_weterynarza).first()
 
-        if not weterynarz or not pracownik:
+        if not weterynarz:
             return jsonify({"error": "Nie znaleziono weterynarza"}), 404
 
         opening_hour = datetime.strptime("09:00", "%H:%M").time()
@@ -585,7 +524,7 @@ def get_available_slots():
 
         booked_slots = Terminarz.query.join(WizytaWeterynarz).filter(
             Terminarz.data_wizyty.between(date_from, date_to),
-            WizytaWeterynarz.id_pracownika == id_weterynarza
+            WizytaWeterynarz.id_weterynarza == id_weterynarza
         ).all()
 
         occupied_times = {(slot.data_wizyty, slot.godzina_wizyty_od.time()) for slot in booked_slots}
@@ -621,6 +560,64 @@ def get_species():
 
     wynik = [{"id_gatunku": g.id_gatunku, "nazwa": g.nazwa} for g in gatunki]
     return jsonify(wynik), 200
+
+# Endpoint do pobierania wizyt danego klienta
+@app.route("/appointment-list", methods=["GET"])
+@require_authorization
+def get_all_appointments(aktualny_klient):
+    try:
+        # Pobierz id_pupila z parametrów zapytania
+        id_pupila = request.args.get("id_pupila", type=int)
+
+        # Pobierz wizyty powiązane z klientem
+        query = (
+            Terminarz.query.join(WizytaWeterynarz, Terminarz.id_wizyty == WizytaWeterynarz.id_wizyty)
+            .join(Weterynarze, WizytaWeterynarz.id_weterynarza == Weterynarze.id_weterynarza)
+            .join(Uslugi, Terminarz.id_uslugi == Uslugi.id_uslugi)
+            .join(Zwierzak, Terminarz.id_pupila == Zwierzak.id_pupila)
+            .filter(Terminarz.id_pupila.in_([z.id_pupila for z in aktualny_klient.zwierzaki]))
+            .order_by(Terminarz.data_wizyty, Terminarz.godzina_wizyty_od)
+        )
+
+        # Dodaj filtr dla konkretnego pupila, jeśli jest podany
+        if id_pupila:
+            query = query.filter(Terminarz.id_pupila == id_pupila)
+
+        wizyty = query.all()
+
+        if not wizyty:
+            return jsonify({"message": "Brak zrealizowanych wizyt"}), 404
+
+        result = []
+        for wizyta in wizyty:
+            weterynarz = Weterynarze.query.get(
+                WizytaWeterynarz.query.filter_by(id_wizyty=wizyta.id_wizyty).first().id_weterynarza
+            )
+            usluga = Uslugi.query.get(wizyta.id_uslugi)
+            pupil = Zwierzak.query.get(wizyta.id_pupila)
+            result.append({
+                "id_wizyty": wizyta.id_wizyty,
+                "data_wizyty": wizyta.data_wizyty.strftime("%Y-%m-%d"),
+                "godzina_wizyty": wizyta.godzina_wizyty_od.strftime("%H:%M"),
+                "lekarz": f"{weterynarz.imie} {weterynarz.nazwisko}",
+                "powod_wizyty": wizyta.opis_dolegliwosci,
+                "usluga": {
+                    "nazwa": usluga.nazwa,
+                    "opis": usluga.opis,
+                    "cena": float(usluga.cena) if usluga.cena else None
+                },
+                "pupil": {
+                    "imie": pupil.imie,
+                    "rasa": pupil.rasa.rasa,
+                    "wiek": pupil.wiek
+                }
+            })
+
+        return jsonify(result), 200
+    except Exception as e:
+        print(f"Błąd podczas pobierania wizyt: {e}")
+        return jsonify({"error": "Wewnętrzny błąd serwera"}), 500
+
 
 
 # METODY PUT
