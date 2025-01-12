@@ -1,5 +1,4 @@
-from model import Klinika, Adresy, Poczty, Wlasciciele, Pracownik, Stanowiska, Terminarz, Weterynarze, Klienci, \
-    Zwierzak, Rasa, WizytaWeterynarz, PracownicyKliniki, Uslugi, Gatunki
+from model import Adresy, Poczty, Terminarz, Weterynarze, Klienci, Zwierzak, Rasa, WizytaWeterynarz, Uslugi, Gatunki
 from datetime import datetime
 from main import app, db
 from werkzeug.security import generate_password_hash
@@ -38,52 +37,18 @@ def init_data():
     db.session.add_all([adres1, adres2, adres3, adres4, adres5, adres6, adres7, adres8, adres9, adres10])
     db.session.commit()
 
-    #klinika
-    klinika1 = Klinika(nazwa="Klinika Weterynaryjna", id_adresu=adres1.id_adresu)
-
-    db.session.add(klinika1)
-    db.session.commit()
-
-    #wlasciciele
-    wlasciciel1 = Wlasciciele(nazwisko="Kowalski", imie="Jan", nr_telefonu="123456789", id_adresu=adres2.id_adresu,
-                              id_kliniki=klinika1.id_kliniki)
-    db.session.add(wlasciciel1)
-    db.session.commit()
-
-    #stanowiska
-    stanowisko1 = Stanowiska(nazwa_stanowiska="Weterynarz", wynagrodzenie=6000.00)
-    stanowisko2 = Stanowiska(nazwa_stanowiska="Asystent Weterynarza", wynagrodzenie=3000.00)
-
-    db.session.add_all([stanowisko1, stanowisko2])
-    db.session.commit()
-
-    #pracownicy
-    pracownik1 = Pracownik(nazwisko="Mazur", imie="Marek", data_urodzenia=datetime(1980, 5, 15), plec="M",
-                           data_zatrudnienia=datetime(2010, 1, 1), nr_telefonu="123123123", pesel="12345678901",
-                           id_stanowiska=stanowisko1.id_stanowiska, id_adresu=adres3.id_adresu,
-                           id_kliniki=klinika1.id_kliniki)
-    pracownik2 = Pracownik(nazwisko="Zielińska", imie="Elżbieta", data_urodzenia=datetime(1992, 3, 25), plec="K",
-                           data_zatrudnienia=datetime(2015, 6, 20), nr_telefonu="321321321", pesel="98765432109",
-                           id_stanowiska=stanowisko2.id_stanowiska, id_adresu=adres4.id_adresu,
-                           id_kliniki=klinika1.id_kliniki)
-
-    db.session.add_all([pracownik1, pracownik2])
-    db.session.commit()
-
     #weterynarze
-    weterynarz1 = Weterynarze(id_pracownika=pracownik1.id_pracownika, doswiadczenie="10 lat w weterynarii",
-                              kwalifikacje="Specjalista w chirurgii", ocena=4.0, status="Aktywny")
-    weterynarz2 = Weterynarze(id_pracownika=pracownik2.id_pracownika, doswiadczenie="2 lata w weterynarii",
-                              kwalifikacje="Asystentka", ocena=4.5, status="Aktywny")
+    weterynarz1 = Weterynarze(nazwisko="Mazur", imie="Marek", data_urodzenia=datetime(1980, 5, 15), plec="M",
+                           data_zatrudnienia=datetime(2010, 1, 1), nr_telefonu="123123123", pesel="12345678901", 
+                           doswiadczenie="10 lat w weterynarii", kwalifikacje="Specjalista w chirurgii", ocena=4.0, 
+                           wyksztalcenie="Wydział Medycyny Weterynaryjnej, Szkoła Główna Gospodarstwa Wiejskiego w Warszawie", 
+                           id_adresu=adres3.id_adresu)
+    weterynarz2 = Weterynarze(nazwisko="Zielińska", imie="Elżbieta", data_urodzenia=datetime(1992, 3, 25), plec="K",
+                           data_zatrudnienia=datetime(2015, 6, 20), nr_telefonu="321321321", pesel="98765432109", 
+                           doswiadczenie="2 lata w weterynarii", kwalifikacje="Asystentka", ocena=4.5, 
+                           wyksztalcenie="Wydział Weterynaryjny Uniwersytetu Warszawskiego", id_adresu=adres4.id_adresu)
 
     db.session.add_all([weterynarz1, weterynarz2])
-    db.session.commit()
-
-    #pracownicy_kliniki
-    pracownik_kliniki1 = PracownicyKliniki(id_pracownika=pracownik2.id_pracownika, godziny_pracy_od=datetime(3000, 1, 1, 10, 0),
-                                          godziny_pracy_do=datetime(3000, 1, 1, 18, 0))
-
-    db.session.add(pracownik_kliniki1)
     db.session.commit()
 
     #klienci
@@ -163,17 +128,23 @@ def init_data():
                            id_pupila=zwierzak2.id_pupila, id_uslugi=usluga1.id_uslugi, opis_dolegliwosci="Osłabienie")
     terminarz4 = Terminarz(data_wizyty=datetime(2025, 1, 14), godzina_wizyty_od=datetime(2025, 1, 14, 14, 0),
                            id_pupila=zwierzak2.id_pupila, id_uslugi=usluga1.id_uslugi, opis_dolegliwosci="Mały apetyt")
+    terminarz5 = Terminarz(data_wizyty=datetime(2025, 1, 5), godzina_wizyty_od=datetime(2025, 1, 5, 10, 0),
+                           id_pupila=zwierzak1.id_pupila, id_uslugi=usluga1.id_uslugi, opis_dolegliwosci="Test przeszłość")
     
 
-    db.session.add_all([terminarz1, terminarz2, terminarz3, terminarz4])
+    db.session.add_all([terminarz1, terminarz2, terminarz3, terminarz4, terminarz5])
     db.session.commit()
 
     #wizyta_wet
-    wizyta_weterynarz1 = WizytaWeterynarz(id_wizyty=terminarz1.id_wizyty, id_pracownika=weterynarz1.id_pracownika)
-    wizyta_weterynarz2 = WizytaWeterynarz(id_wizyty=terminarz2.id_wizyty, id_pracownika=weterynarz1.id_pracownika)
+    wizyta_weterynarz1 = WizytaWeterynarz(id_wizyty=terminarz1.id_wizyty, id_weterynarza=weterynarz1.id_weterynarza)
+    wizyta_weterynarz2 = WizytaWeterynarz(id_wizyty=terminarz2.id_wizyty, id_weterynarza=weterynarz2.id_weterynarza)
+    wizyta_weterynarz2 = WizytaWeterynarz(id_wizyty=terminarz3.id_wizyty, id_weterynarza=weterynarz2.id_weterynarza)
+    wizyta_weterynarz2 = WizytaWeterynarz(id_wizyty=terminarz4.id_wizyty, id_weterynarza=weterynarz1.id_weterynarza)
+    wizyta_weterynarz2 = WizytaWeterynarz(id_wizyty=terminarz5.id_wizyty, id_weterynarza=weterynarz1.id_weterynarza)
 
     db.session.add_all([wizyta_weterynarz1, wizyta_weterynarz2])
     db.session.commit()
+    print("Dane zostały dodane.")
 
 @app.cli.command("show_data")
 def show_data():
@@ -189,34 +160,15 @@ def show_data():
         print(f"ID: {adres.id_adresu}, Miasto: {adres.miasto}, Ulica: {adres.ulica}, Nr Lokalu: {adres.nr_lokalu}, ID Poczty: {adres.id_poczty}")
     print()
 
-    # Klinika
-    print("Klinika:")
-    for klinika in Klinika.query.all():
-        print(f"ID: {klinika.id_kliniki}, Nazwa: {klinika.nazwa}, ID Adresu: {klinika.id_adresu}")
-    print()
-
-    # Właściciele
-    print("Właściciele:")
-    for wlasciciel in Wlasciciele.query.all():
-        print(f"ID: {wlasciciel.id_wlasciciela}, Imię: {wlasciciel.imie}, Nazwisko: {wlasciciel.nazwisko}, Nr Telefonu: {wlasciciel.nr_telefonu}, ID Adresu: {wlasciciel.id_adresu}, ID Kliniki: {wlasciciel.id_kliniki}")
-    print()
-
-    # Stanowiska
-    print("Stanowiska:")
-    for stanowisko in Stanowiska.query.all():
-        print(f"ID: {stanowisko.id_stanowiska}, Nazwa Stanowiska: {stanowisko.nazwa_stanowiska}, Wynagrodzenie: {stanowisko.wynagrodzenie}")
-    print()
-
-    # Pracownicy
-    print("Pracownicy:")
-    for pracownik in Pracownik.query.all():
-        print(f"ID: {pracownik.id_pracownika}, Imię: {pracownik.imie}, Nazwisko: {pracownik.nazwisko}, Data Urodzenia: {pracownik.data_urodzenia}, Plec: {pracownik.plec}, Data Zatrudnienia: {pracownik.data_zatrudnienia}, Nr Telefonu: {pracownik.nr_telefonu}, PESEL: {pracownik.pesel}, ID Stanowiska: {pracownik.id_stanowiska}, ID Adresu: {pracownik.id_adresu}, ID Kliniki: {pracownik.id_kliniki}")
-    print()
-
     # Weterynarze
     print("Weterynarze:")
     for weterynarz in Weterynarze.query.all():
-        print(f"ID Pracownika: {weterynarz.id_pracownika}, Doświadczenie: {weterynarz.doswiadczenie}, Kwalifikacje: {weterynarz.kwalifikacje}, Ocena: {weterynarz.ocena}, Status: {weterynarz.status}")
+        print(f"ID: {weterynarz.id_weterynarza}, Imię: {weterynarz.imie}, Nazwisko: {weterynarz.nazwisko}, "
+      f"Data Urodzenia: {weterynarz.data_urodzenia}, Plec: {weterynarz.plec}, "
+      f"Data Zatrudnienia: {weterynarz.data_zatrudnienia}, Nr Telefonu: {weterynarz.nr_telefonu}, "
+      f"PESEL: {weterynarz.pesel}, ID Adresu: {weterynarz.id_adresu}, "
+      f"Doświadczenie: {weterynarz.doswiadczenie}, Kwalifikacje: {weterynarz.kwalifikacje}, "
+      f"Ocena: {weterynarz.ocena}, Wykształcenie: {weterynarz.wyksztalcenie}")
     print()
 
     # Klienci
@@ -252,7 +204,7 @@ def show_data():
     # Wizyty Weterynarzy
     print("Wizyty Weterynarzy:")
     for wizyta in WizytaWeterynarz.query.all():
-        print(f"ID Wizyty: {wizyta.id_wizyty}, ID Pracownika: {wizyta.id_pracownika}")
+        print(f"ID Wizyty: {wizyta.id_wizyty}, ID Weterynarza: {wizyta.id_weterynarza}")
     print()
 
     # Uslugi

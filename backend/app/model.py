@@ -1,25 +1,5 @@
 from main import db
 
-class Klinika(db.Model):
-    _tablename_ = 'klinika'
-    id_kliniki = db.Column(db.Integer, primary_key=True, nullable=False)
-    nazwa = db.Column(db.String(50), nullable=False)
-    id_adresu = db.Column(db.Integer, db.ForeignKey('adresy.id_adresu'), nullable=False)
-
-    pracownicy = db.relationship('Pracownik', back_populates='klinika', lazy=True)
-    wlasciciele = db.relationship('Wlasciciele', back_populates='klinika', lazy=True)
-
-class Wlasciciele(db.Model):
-    _tablename_ = 'wlasciciele'
-    id_wlasciciela = db.Column(db.Integer, primary_key=True, nullable=False)
-    nazwisko = db.Column(db.String(40), nullable=False)
-    imie = db.Column(db.String(20), nullable=False)
-    nr_telefonu = db.Column(db.String(20))
-    id_adresu = db.Column(db.Integer, db.ForeignKey('adresy.id_adresu'), nullable=False)
-    id_kliniki = db.Column(db.Integer, db.ForeignKey('klinika.id_kliniki'), nullable=False)
-
-    klinika = db.relationship('Klinika', back_populates='wlasciciele')
-
 class Adresy(db.Model):
     _tablename_ = 'adresy'
     id_adresu = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -28,8 +8,7 @@ class Adresy(db.Model):
     nr_lokalu = db.Column(db.String(5), nullable=False)
     id_poczty = db.Column(db.Integer, db.ForeignKey('poczty.id_poczty'), nullable=False)
 
-    adresy_wlasciciele = db.relationship('Wlasciciele', backref='adres', lazy=True)
-    adresy_pracownicy = db.relationship('Pracownik', backref='adres', lazy=True)
+    adresy_weterynarze = db.relationship('Weterynarze', backref='adres', lazy=True)
     adresy_klienci = db.relationship('Klienci', backref='adres', lazy=True)
 
 class Poczty(db.Model):
@@ -40,9 +19,9 @@ class Poczty(db.Model):
 
     poczty_adresy = db.relationship('Adresy', backref='poczta', lazy=True)
 
-class Pracownik(db.Model):
-    _tablename_ = 'pracownik'
-    id_pracownika = db.Column(db.Integer, primary_key=True, nullable=False)
+class Weterynarze(db.Model):
+    _tablename_ = 'weterynarze'
+    id_weterynarza = db.Column(db.Integer, primary_key=True, nullable=False)
     nazwisko = db.Column(db.String(40), nullable=False)
     imie = db.Column(db.String(20), nullable=False)
     data_urodzenia = db.Column(db.DateTime, nullable=False)
@@ -50,39 +29,16 @@ class Pracownik(db.Model):
     data_zatrudnienia = db.Column(db.DateTime, nullable=False)
     nr_telefonu = db.Column(db.String(20))
     pesel = db.Column(db.String(11))
-    data_zwolnienia = db.Column(db.DateTime)
-    id_stanowiska = db.Column(db.Integer, db.ForeignKey('stanowiska.id_stanowiska'), nullable=False)
-    id_adresu = db.Column(db.Integer, db.ForeignKey('adresy.id_adresu'), nullable=False)
-    id_kliniki = db.Column(db.Integer, db.ForeignKey('klinika.id_kliniki'), nullable=False)
-
-    klinika = db.relationship('Klinika', back_populates='pracownicy')
-
-class PracownicyKliniki(db.Model):
-    _tablename_ = 'pracownicy_kliniki'
-    id_pracownika = db.Column(db.Integer, db.ForeignKey('pracownik.id_pracownika'), primary_key=True, nullable=False)
-    godziny_pracy_od = db.Column(db.DateTime, nullable=False)
-    godziny_pracy_do = db.Column(db.DateTime, nullable=False)
-
-class Stanowiska(db.Model):
-    _tablename_ = 'stanowiska'
-    id_stanowiska = db.Column(db.Integer, primary_key=True, nullable=False)
-    nazwa_stanowiska = db.Column(db.String(30), nullable=False)
-    wynagrodzenie = db.Column(db.Numeric(10, 2))
-
-    pracownicy = db.relationship('Pracownik', backref='stanowisko', lazy=True)
-
-class Weterynarze(db.Model):
-    _tablename_ = 'weterynarze'
-    id_pracownika = db.Column(db.Integer, db.ForeignKey('pracownik.id_pracownika'), primary_key=True, nullable=False)
     doswiadczenie = db.Column(db.String(150), nullable=False)
     kwalifikacje = db.Column(db.String(100), nullable=False)
     ocena = db.Column(db.Numeric(2,1))
-    status = db.Column(db.String(20))
+    wyksztalcenie = db.Column(db.String(100), nullable=False)
+    id_adresu = db.Column(db.Integer, db.ForeignKey('adresy.id_adresu'), nullable=False)
 
 class WizytaWeterynarz(db.Model):
     _tablename_ = 'wizyta_weterynarz'
     id_wizyty = db.Column(db.Integer, db.ForeignKey('terminarz.id_wizyty'), primary_key=True, nullable=False)
-    id_pracownika = db.Column(db.Integer, db.ForeignKey('weterynarze.id_pracownika'), primary_key=True, nullable=False)
+    id_weterynarza = db.Column(db.Integer, db.ForeignKey('weterynarze.id_weterynarza'), primary_key=True, nullable=False)
 
 class Terminarz(db.Model):
     _tablename_ = 'terminarz'
