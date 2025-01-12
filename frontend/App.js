@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Veterinarians from "./pages/Veterinarians";
 import AppointmentCalendar from "./pages/AppointmentCalendar";
-import CompletedAppointments from "./pages/CompletedAppointments";
+import Appointments from "./pages/Appointments";
 import Register from "./pages/Register";
 import AddPet from "./pages/AddPet";
 import EditPet from "./pages/EditPet";
@@ -45,7 +45,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="/completed-appointments" element={<CompletedAppointments />} />
+          <Route path="/appointments" element={<Appointments />} />
           <Route
             path="/my-pets"
             element={

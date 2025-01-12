@@ -142,6 +142,14 @@ r = requests.get(f"{url}/client-appointments", headers=headers)
 print(json.dumps(r.json(), indent=4, ensure_ascii=False))
 print(r.status_code)
 
+#TEST POZYTYWNY DLA GET /appointment-list
+print("TEST POZYTYWNY DLA GET /appointments-list")
+
+# Przykład pozytywny: poprawny token 
+print("[Przypadek pozytywny] klient istnieje:")
+r = requests.get(f"{url}/appointment-list", headers=headers, params=params)
+print(json.dumps(r.json(), indent=4, ensure_ascii=False))
+print(r.status_code)
 
 # TESTY DLA GET available-slots
 print("TESTY DLA GET available-slots")

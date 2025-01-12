@@ -21,6 +21,11 @@ const MyPets = () => {
   }, []);
 
   const handleSelectPet = async (id) => {
+    if (selectedPet && selectedPet.id_pupila === id) {
+      setSelectedPet(null);
+      return;
+    }
+
     try {
       const response = await apiClient.get(`/api/pet-details/${id}`);
       setSelectedPet(response.data);
@@ -60,7 +65,9 @@ const MyPets = () => {
                       className="pets-button"
                       onClick={() => handleSelectPet(pet.id_pupila)}
                     >
-                      Pokaż szczegóły
+                      {selectedPet && selectedPet.id_pupila === pet.id_pupila
+                        ? "Ukryj szczegóły"
+                        : "Pokaż szczegóły"}
                     </button>
                   </td>
                 </tr>

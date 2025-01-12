@@ -53,7 +53,7 @@ const AddPet = () => {
     try {
       await apiClient.post("/api/add-pet", formData);
       setSuccess(true);
-      setTimeout(() => navigate("/"), 3000); 
+      setTimeout(() => navigate("/my-pets"), 3000); 
     } catch (err) {
       setError("Wystąpił błąd podczas dodawania zwierzaka.");
     }

@@ -71,7 +71,7 @@ const Navbar = () => {
               <Link to="/my-pets">MOJE ZWIERZAKI</Link>
             </li>
             <li>
-              <Link to="/completed-appointments">WIZYTY</Link>
+              <Link to="/appointments">WIZYTY</Link>
             </li>
           </>
         )}

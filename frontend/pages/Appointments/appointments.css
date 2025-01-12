@@ -15,7 +15,9 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień */
   max-width: 1200px;
-  margin: 0 auto; /* Wyśrodkowanie kontenera */
+  margin: 10px 10px; /* Wyśrodkowanie kontenera */
+  min-width: 1000px; /* Minimalna szerokość */
+  min-height: 465px; /* Minimalna wysokość */
 }
 
 .appointments-container h1 {
@@ -99,6 +101,7 @@
   border: 1px solid #ddd;
   padding: 12px 15px;
   text-align: center;
+  white-space: nowrap;
 }
 
 .appointments-table th {
@@ -123,3 +126,63 @@
   margin-top: 20px;
   font-size: 1.2rem;
 }
+
+.success {
+  color: green;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+}
+
+
+.appointments-filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.filter-button {
+  padding: 10px 20px;
+  background-color: #ADCBD3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.filter-button.active {
+  background-color: #98b3bb;
+}
+
+.filter-button:hover {
+  background-color: #98b3bb;
+}
+
+.details-button {
+  padding: 8px 12px;
+  background-color: #ADCBD3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.details-button:hover {
+  background-color: #98b3bb;
+}
+
+.details-row {
+  background-color: #f9f9f9;
+}
+
+.details-container {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+

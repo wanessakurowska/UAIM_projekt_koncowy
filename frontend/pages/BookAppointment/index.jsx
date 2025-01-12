@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../../api";
 import "./bookAppointment.css";
 
 const BookAppointment = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { date, time, veterinarianId } = location.state || {};
-
   const [veterinarians, setVeterinarians] = useState([]);
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState("");
@@ -53,6 +53,7 @@ const BookAppointment = () => {
         opis_dolegliwosci: description,
       });
       setSuccess("Wizyta została pomyślnie zarezerwowana!");
+      setTimeout(() => navigate("/appointments"), 3000);
     } catch (err) {
       console.error("Błąd podczas rezerwacji:", err);
       setError("Nie udało się zarezerwować wizyty.");

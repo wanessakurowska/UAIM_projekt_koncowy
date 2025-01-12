@@ -6,9 +6,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
+  }
   
-.edit-pet-container {
+  .edit-pet-container {
     font-family: 'Rajdhani', sans-serif; /* Profesjonalna czcionka */
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.9); /* Półprzezroczyste białe tło */
@@ -17,33 +17,33 @@
     max-width: 500px;
     width: 100%; /* Dopasowanie szerokości */
     margin: 10px 10px; /* Wyśrodkowanie */
-}
+  }
   
-.edit-pet-container h1 {
+  .edit-pet-container h1 {
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 15px;
     color: #000000; /* Kolor tekstu */
     text-transform: uppercase;
-}
+  }
   
-.edit-pet-container form {
+  .edit-pet-container form {
     display: flex;
     flex-direction: column;
     gap: 10px; /* Odstęp między polami */
-}
+  }
   
-.edit-pet-container label {
+  .edit-pet-container label {
     font-size: 1rem;
     font-weight: bold;
     color: #333;
     margin-top: -1px;
-}
+  }
   
-.edit-pet-container input,
-.edit-pet-container textarea,
-.edit-pet-container select {
+  .edit-pet-container input,
+  .edit-pet-container textarea,
+  .edit-pet-container select {
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ddd;
@@ -51,14 +51,14 @@
     width: 100%;
     box-sizing: border-box;
     margin-top: -1px;
-}
+  }
   
-.edit-pet-container textarea {
+  .edit-pet-container textarea {
     resize: none;
     height: 60px; /* Wysokość pola tekstowego */
-}
+  }
   
-.edit-pet-container button {
+  .edit-pet-container button {
     padding: 10px;
     font-size: 1rem;
     background-color: #ADCBD3; /* Kolor przycisku */
@@ -67,15 +67,15 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
+  }
   
-.edit-pet-container button:hover {
+  .edit-pet-container button:hover {
     background-color: #98b3bb; /* Ciemniejszy kolor przycisku po najechaniu */
-}
+  }
   
-.edit-pet-container p {
+  .edit-pet-container p {
     text-align: center;
     font-size: 1rem;
     font-weight: bold;
-}
+  }
   
