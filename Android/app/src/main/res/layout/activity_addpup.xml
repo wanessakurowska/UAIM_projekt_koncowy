@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background2">
+
+    <EditText
+        android:id="@+id/editTextImiePup"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="0dp"
+        android:hint="Imie pupila" />
+
+    <EditText
+        android:id="@+id/editTextOpisPupil"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/editTextNumberWiek"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:hint="Opis pupila" />
+
+    <EditText
+        android:id="@+id/editTextNumberWiek"
+        android:layout_width="409dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/editTextImiePup"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Wiek pupila"
+        />
+
+    <Button
+        android:id="@+id/buttonFinAdP"
+        android:layout_width="wrap_content"
+        android:layout_height="63dp"
+        android:layout_below="@+id/spinnerRasa"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="151dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="153dp"
+        android:text="Dodaj"
+        android:textColor="@color/button_text" />
+
+    <Spinner
+        android:id="@+id/spinnerGatunek"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_below="@+id/spinnerPlecPupil"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp" />
+
+    <Spinner
+        android:id="@+id/spinnerPlecPupil"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_below="@+id/editTextOpisPupil"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp" />
+
+    <Spinner
+        android:id="@+id/spinnerRasa"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_below="@+id/spinnerGatunek"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp" />
+
+</RelativeLayout>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">UaimVet</string>
+
+    <string-array name="gender_options">
+        <item>Męska</item>
+        <item>Żeńska</item>
+    </string-array>
+
+
+</resources>

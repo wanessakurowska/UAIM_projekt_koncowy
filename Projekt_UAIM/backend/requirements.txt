@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Cors
+psycopg2-binary
+Werkzeug
+PyJWT==2.7.0 

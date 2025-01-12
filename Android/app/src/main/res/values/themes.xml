@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Uaim" parent="Theme.AppCompat">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Override text color for various elements -->
+        <item name="android:textColor">@android:color/black</item> <!-- Set text color for labels to black -->
+        <item name="android:textColorPrimary">@android:color/black</item> <!-- For primary text -->
+        <item name="android:textColorSecondary">@android:color/black</item> <!-- For secondary text -->
+        <item name="android:textColorTertiary">@android:color/black</item> <!-- For tertiary text -->
+
+        <!-- Set button text color to white -->
+        <item name="colorButtonNormal">@android:color/white</item> <!-- Normal button text color -->
+        <item name="colorControlNormal">@android:color/white</item> <!-- Control elements (e.g., button) text color -->
+        <item name="colorControlActivated">@android:color/white</item> <!-- For activated controls -->
+        <item name="colorControlHighlight">@android:color/white</item> <!-- For highlighted controls -->
+    </style>
+</resources>

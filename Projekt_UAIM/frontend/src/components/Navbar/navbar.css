@@ -1,0 +1,52 @@
+.navbar {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 10px 20px;
+}
+
+.navbar-list {
+  display: flex;
+  gap: 20px; 
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  flex: 1;
+  margin-left: 105px;
+}
+
+.navbar-list a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 16px;
+}
+
+.navbar-list i {
+  font-size: 20px; 
+  color: #000000;
+  margin-right: 5px; 
+}
+
+.navbar-auth {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-auth a,
+.logout-link {
+  text-decoration: none;
+  color: #000000;
+  font-size: 16px;
+}
+
+.navbar-auth a:hover,
+.logout-link:hover {
+  text-decoration: underline;
+}

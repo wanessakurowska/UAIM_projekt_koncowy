@@ -1,0 +1,117 @@
+.calendar-page {
+  background-image: url("/public/images/łapkiVetSlay5.png");
+  background-size: 100% auto;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-container {
+  font-family: 'Rajdhani', sans-serif;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 1500px;
+  text-align: center;
+  margin: 10px 10px;
+}
+
+.calendar-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000000;
+  text-transform: uppercase;
+  position: relative;
+  top: -20px;
+}
+
+.form-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  position: relative;
+  top: -20px;
+}
+
+.form-inline select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 220px;
+}
+
+.calendar-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.navigation-button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  background-color: #ADCBD3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: -30px;
+}
+
+.navigation-button:hover {
+  background-color: #98b3bb;
+}
+
+.calendar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  top: -40px;
+}
+
+.day-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.day-column h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.time-slot {
+  width: 70px;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.time-slot.available:hover {
+  background-color: #e0f7fa;
+}
+
+.time-slot.unavailable {
+  text-decoration: line-through;
+  color: #999;
+  cursor: not-allowed;
+}

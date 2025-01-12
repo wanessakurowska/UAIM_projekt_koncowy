@@ -1,0 +1,66 @@
+.services-page {
+  background-image: url("/public/images/łapkiVetSlay5.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.services-container {
+  font-family: 'Rajdhani', sans-serif;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 1200px;
+  margin: 10px 10px;
+}
+
+.services-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000000;
+  text-transform: uppercase;
+}
+
+.services-table-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.services-table th,
+.services-table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.services-table th {
+  background-color: #ADCBD3;
+  color: white;
+  text-transform: uppercase;
+}
+
+.services-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.services-table tr:hover {
+  background-color: #e9ecef;
+  transition: background-color 0.3s ease;
+}

@@ -1,0 +1,2 @@
+Jako że android wymaga Gradle to może to nie działać po zwykłym sklonowaniu. 
+Powinno działać po utworzeniu nowego projektu w AndroidStudio (New Project -> Phone and Tablet -> No Activity -> Name: uaim; Language: Java; Build configuration language: Groovy DSL (build.gradle)) i przekopiowaniu do niego plików z gita.

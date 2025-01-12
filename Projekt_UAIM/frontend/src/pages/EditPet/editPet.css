@@ -1,0 +1,81 @@
+.edit-pet-page {
+  background-image: url("/public/images/łapkiVetSlay5.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-pet-container {
+  font-family: 'Rajdhani', sans-serif;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 100%;
+  margin: 10px 10px;
+}
+
+.edit-pet-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #000000;
+  text-transform: uppercase;
+}
+
+.edit-pet-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-pet-container label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-top: -1px;
+}
+
+.edit-pet-container input,
+.edit-pet-container textarea,
+.edit-pet-container select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: -1px;
+}
+
+.edit-pet-container textarea {
+  resize: none;
+  height: 60px;
+}
+
+.edit-pet-container button {
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #ADCBD3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-pet-container button:hover {
+  background-color: #98b3bb;
+}
+
+.edit-pet-container p {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+}
+  
