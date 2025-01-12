@@ -592,3 +592,29 @@ def edit_pet_details(aktualny_klient, pet_id):
 
     db.session.commit()
     return jsonify({"message": "Zwierzak został zaktualizowany"}), 200
+
+
+# METODY DELETE
+
+# Endpoint do odwołania wizyty
+@app.route("/api/cancel-appointment/<int:wizyta_id>", methods=["DELETE"])
+@require_authorization
+def cancel_appointment(aktualny_klient, wizyta_id):
+    try:
+        wizyta = Terminarz.query.get(wizyta_id)
+
+        if not wizyta:
+            return jsonify({"error": "Nie znaleziono wizyty o podanym ID"}), 404
+        
+        zwierzak = Zwierzak.query.get(wizyta.id_pupila)
+        if not zwierzak or zwierzak.id_klienta != aktualny_klient.id_klienta:
+            return jsonify({"error": "Nie masz uprawnień do odwołania tej wizyty"}), 403
+
+        WizytaWeterynarz.query.filter_by(id_wizyty=wizyta_id).delete()
+
+        db.session.delete(wizyta)
+        db.session.commit()
+        return jsonify({"message": "Wizyta została odwołana"}), 200
+    except Exception as e:
+        print(f"Błąd podczas anulowania wizyty: {e}")
+        return jsonify({"error": "Wewnętrzny błąd serwera"}), 500

@@ -6,12 +6,20 @@ import "./calendar.css";
 const AppointmentCalendar = () => {
   const [veterinarians, setVeterinarians] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
-  const [currentDates, setCurrentDates] = useState([]); // Daty aktualnie widoczne na stronie
+  const [currentDates, setCurrentDates] = useState([]);
   const [selectedVeterinarian, setSelectedVeterinarian] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const daysToShow = 7; // Liczba dni wyświetlanych w jednym widoku
+  const daysToShow = 14;
+
+  // Funkcja filtrująca daty, aby usunąć soboty i niedziele
+  const filterWeekends = (dates) => {
+    return dates.filter((date) => {
+      const dayOfWeek = date.getDay();
+      return dayOfWeek !== 0 && dayOfWeek !== 6; // 0 = niedziela, 6 = sobota
+    });
+  };
 
   useEffect(() => {
     const fetchVeterinarians = async () => {
@@ -26,51 +34,50 @@ const AppointmentCalendar = () => {
 
     fetchVeterinarians();
 
-    // Ustaw daty początkowe (dziś i kolejne 6 dni)
+    // Inicjalizacja dat
     const startDate = new Date();
     const initialDates = Array.from({ length: daysToShow }, (_, i) =>
       new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000)
     );
-    setCurrentDates(initialDates);
+
+    setCurrentDates(filterWeekends(initialDates));
   }, []);
 
-  // Użyj useCallback, aby funkcja była stabilna między renderami
   const fetchAvailableSlots = useCallback(async () => {
-      setError("");
-      setAvailableSlots([]);
+    setError("");
+    setAvailableSlots([]);
 
-      if (!selectedVeterinarian) {
-        setError("Wybierz weterynarza.");
-        return;
-      }
+    if (!selectedVeterinarian) {
+      setError("Wybierz weterynarza.");
+      return;
+    }
 
-      try {
-        const response = await apiClient.get("/api/available-slots", {
-          params: {
-            date_from: currentDates[0].toISOString().split("T")[0],
-            date_to: currentDates[currentDates.length - 1].toISOString().split("T")[0],
-            id_weterynarza: selectedVeterinarian,
-          },
-        });
+    try {
+      const response = await apiClient.get("/api/available-slots", {
+        params: {
+          date_from: currentDates[0]?.toISOString().split("T")[0],
+          date_to: currentDates[currentDates.length - 1]?.toISOString().split("T")[0],
+          id_weterynarza: selectedVeterinarian,
+        },
+      });
 
-        setAvailableSlots(
-          response.data.map((slot) => ({
-            slot: `${slot.date}T${slot.time}`,
-            available: slot.available,
-          }))
-        );
-      } catch (err) {
-        console.error("Błąd podczas pobierania wolnych terminów:", err);
-        setError("Nie udało się pobrać wolnych terminów.");
-      }
-    }, [selectedVeterinarian, currentDates]); // Dodaj selectedVeterinarian jako zależność
+      setAvailableSlots(
+        response.data.map((slot) => ({
+          slot: `${slot.date}T${slot.time}`,
+          available: slot.available,
+        }))
+      );
+    } catch (err) {
+      console.error("Błąd podczas pobierania wolnych terminów:", err);
+      setError("Nie udało się pobrać wolnych terminów.");
+    }
+  }, [selectedVeterinarian, currentDates]);
 
   useEffect(() => {
     if (selectedVeterinarian) {
       fetchAvailableSlots();
     }
-  }, [fetchAvailableSlots, selectedVeterinarian]); // Dodaj selectedVeterinarian tutaj
-
+  }, [fetchAvailableSlots, selectedVeterinarian]);
 
   const handleSlotClick = (slot) => {
     const [date, time] = slot.split("T");
@@ -83,20 +90,20 @@ const AppointmentCalendar = () => {
     });
   };
 
-  // Przesuń zakres dat w przód
   const nextDates = () => {
-    const newDates = currentDates.map(
-      (date) => new Date(date.getTime() + daysToShow * 24 * 60 * 60 * 1000)
+    const lastDate = currentDates[currentDates.length - 1];
+    const newDates = Array.from({ length: daysToShow }, (_, i) =>
+      new Date(lastDate.getTime() + (i + 1) * 24 * 60 * 60 * 1000)
     );
-    setCurrentDates(newDates);
+    setCurrentDates(filterWeekends(newDates));
   };
 
-  // Przesuń zakres dat w tył
   const prevDates = () => {
-    const newDates = currentDates.map(
-      (date) => new Date(date.getTime() - daysToShow * 24 * 60 * 60 * 1000)
+    const firstDate = currentDates[0];
+    const newDates = Array.from({ length: daysToShow }, (_, i) =>
+      new Date(firstDate.getTime() - (daysToShow - i) * 24 * 60 * 60 * 1000)
     );
-    setCurrentDates(newDates);
+    setCurrentDates(filterWeekends(newDates));
   };
 
   return (
