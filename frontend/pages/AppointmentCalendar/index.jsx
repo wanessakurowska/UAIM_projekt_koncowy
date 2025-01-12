@@ -118,7 +118,7 @@ const AppointmentCalendar = () => {
           >
             <option value="">-- Wybierz weterynarza --</option>
             {veterinarians.map((vet) => (
-              <option key={vet.id} value={vet.id}>
+              <option key={vet.id_weterynarza} value={vet.id_weterynarza}>
                 {vet.imię} {vet.nazwisko}
               </option>
             ))}

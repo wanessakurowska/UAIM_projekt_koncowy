@@ -39,9 +39,8 @@ const Veterinarians = () => {
                   <th>Nazwisko</th>
                   <th>Doświadczenie</th>
                   <th>Kwalifikacje</th>
+                  <th>Wykształcenie</th>
                   <th>Ocena</th>
-                  <th>Status</th>
-                  <th>Klinika</th>
                 </tr>
               </thead>
               <tbody>
@@ -51,12 +50,11 @@ const Veterinarians = () => {
                     <td>{vet.nazwisko}</td>
                     <td>{vet.doświadczenie}</td>
                     <td>{vet.kwalifikacje}</td>
+                    <td>{vet.wyksztalcenie}</td>
                     <td className="rating-cell">
                       {vet.ocena}
                       <i className="fas fa-star"></i>
                     </td>
-                    <td>{vet.status}</td>
-                    <td>{vet.klinika || "Brak danych"}</td>
                   </tr>
                 ))}
               </tbody>
