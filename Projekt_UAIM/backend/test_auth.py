@@ -6,9 +6,6 @@ import jwt
 from werkzeug.security import generate_password_hash
 from datetime import datetime, timedelta
 
-# Dodanie folderu backend do ścieżki modułów
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from main import db, app, Klienci
 
 @pytest.fixture
